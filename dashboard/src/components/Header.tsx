@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Hexagon, Settings, User, Activity, Cpu, Database, Zap } from 'lucide-react'
+import { Hexagon, Settings, User, Activity, Cpu, Database, Zap, Menu } from 'lucide-react'
 import { useClock } from '@/lib/hooks/useClock'
 import { useAnimatedNumber } from '@/lib/hooks/useAnimatedNumber'
 
-export default function Header() {
+export default function Header({ onMenuClick }: { onMenuClick?: () => void } = {}) {
   const time = useClock()
   const [date, setDate] = useState('')
   const [cpuVal, setCpuVal] = useState(42)
@@ -41,6 +41,12 @@ export default function Header() {
     >
       {/* Left: Logo + Title */}
       <div className="flex items-center gap-4">
+        <button
+          onClick={onMenuClick}
+          className="lg:hidden p-2 -ml-2 rounded-lg text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
         <div className="relative flex items-center justify-center w-10 h-10">
           <motion.div
             animate={{ rotate: 360 }}

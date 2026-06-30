@@ -29,6 +29,7 @@ export default function DashboardPage() {
   const [showCreator, setShowCreator] = useState(false)
   const [editAgent, setEditAgent] = useState<AgentConfig | undefined>()
   const [orgRefreshKey, setOrgRefreshKey] = useState(0)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const agents = getAllAgents()
   const activeAgent = agents.find(a => a.id === activePage)
@@ -53,14 +54,40 @@ export default function DashboardPage() {
 
   return (
     <div className="h-screen flex overflow-hidden">
-      <Sidebar
-        activeAgent={activePage}
-        onSelect={setActivePage}
-        onCreateAgent={handleCreateAgent}
-      />
+      {/* Desktop sidebar */}
+      <div className="hidden lg:block">
+        <Sidebar
+          activeAgent={activePage}
+          onSelect={setActivePage}
+          onCreateAgent={handleCreateAgent}
+        />
+      </div>
+
+      {/* Mobile off-canvas sidebar */}
+      <AnimatePresence>
+        {sidebarOpen && (
+          <>
+            <motion.div
+              key="scrim"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="lg:hidden fixed inset-0 z-40 bg-black/60"
+              onClick={() => setSidebarOpen(false)}
+            />
+            <div className="lg:hidden fixed inset-y-0 left-0 z-50">
+              <Sidebar
+                activeAgent={activePage}
+                onSelect={(id) => { setActivePage(id); setSidebarOpen(false) }}
+                onCreateAgent={() => { handleCreateAgent(); setSidebarOpen(false) }}
+              />
+            </div>
+          </>
+        )}
+      </AnimatePresence>
 
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <Header />
+        <Header onMenuClick={() => setSidebarOpen(true)} />
 
         <AnimatePresence mode="wait">
 
