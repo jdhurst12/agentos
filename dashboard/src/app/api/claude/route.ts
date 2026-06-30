@@ -58,11 +58,23 @@ export async function POST(req: NextRequest) {
           try {
             const parsed = JSON.parse(trimmed)
 
-            // Handle stream-json format from claude CLI
+            // stream-json streaming delta format
             if (parsed.type === 'content_block_delta' && parsed.delta?.text) {
               controller.enqueue(
                 encoder.encode(`data: ${JSON.stringify({ text: parsed.delta.text })}\n\n`)
               )
+            // claude CLI --output-format stream-json assistant message (non-delta)
+            } else if (
+              parsed.type === 'assistant' &&
+              Array.isArray(parsed.message?.content)
+            ) {
+              for (const block of parsed.message.content) {
+                if (block.type === 'text' && block.text) {
+                  controller.enqueue(
+                    encoder.encode(`data: ${JSON.stringify({ text: block.text })}\n\n`)
+                  )
+                }
+              }
             } else if (parsed.type === 'message_stop') {
               close()
               return

@@ -164,16 +164,18 @@ export default function ClaudePanel() {
     d.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' })
 
   const formatContent = (content: string) => {
-    // Simple markdown-like formatting
-    return content
-      .split('\n')
-      .map((line, i) => {
-        if (line.startsWith('**') && line.endsWith('**')) {
-          return <div key={i} className="font-bold text-white mt-2 mb-1">{line.slice(2, -2)}</div>
+    return content.split('\n').map((line, i) => {
+      if (line === '') return <div key={i} className="h-1" />
+      // Render inline **bold** spans within a line
+      const parts = line.split(/(\*\*[^*]+\*\*)/)
+      const rendered = parts.map((part, j) => {
+        if (part.startsWith('**') && part.endsWith('**')) {
+          return <strong key={j} className="text-white font-semibold">{part.slice(2, -2)}</strong>
         }
-        if (line === '') return <div key={i} className="h-1" />
-        return <div key={i} className="leading-relaxed">{line}</div>
+        return <span key={j}>{part}</span>
       })
+      return <div key={i} className="leading-relaxed">{rendered}</div>
+    })
   }
 
   return (
@@ -324,7 +326,6 @@ export default function ClaudePanel() {
             placeholder="Send a command to Claude... (Enter to send, Shift+Enter for newline)"
             className="flex-1 bg-transparent text-sm text-slate-200 placeholder-slate-600 resize-none outline-none leading-relaxed max-h-32 min-h-[36px] py-1 px-2"
             rows={1}
-            style={{ height: 'auto' }}
             onInput={(e) => {
               const t = e.target as HTMLTextAreaElement
               t.style.height = 'auto'

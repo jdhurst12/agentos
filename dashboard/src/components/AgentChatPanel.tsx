@@ -65,6 +65,12 @@ export default function AgentChatPanel({ agentId }: { agentId: AgentId }) {
   ])
   const [loading, setLoading] = useState(false)
   const [running, setRunning] = useState(agent.status === 'ACTIVE')
+
+  // Reset running state if the agent prop changes (e.g. sidebar navigation recycles the component)
+  useEffect(() => {
+    setRunning(agent.status === 'ACTIVE')
+    setLoading(false)
+  }, [agentId, agent.status])
   const bottomRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
