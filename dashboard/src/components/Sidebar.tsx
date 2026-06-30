@@ -1,76 +1,22 @@
 'use client'
 
-import React from 'react'
-import { motion } from 'framer-motion'
-import { Hexagon, Zap, LayoutDashboard, Settings, ChevronRight, Target, BookOpen } from 'lucide-react'
+import React, { useEffect, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import {
+  Hexagon, Zap, LayoutDashboard, Settings, ChevronRight,
+  Target, BookOpen, Network, Plus, Users, GitBranch,
+} from 'lucide-react'
 import clsx from 'clsx'
+import { BUILTIN_AGENTS, getCustomAgents, type AgentConfig } from '@/lib/agents'
 
-export type AgentId = 'claude' | 'openclaw' | 'hermes' | 'nexus' | 'phantom'
-export type PageId = AgentId | 'dashboard' | 'goals' | 'journal'
+export type AgentId = string
+export type PageId = string
 
-export const AGENTS: {
-  id: AgentId
-  name: string
-  handle: string
-  type: string
-  status: 'ACTIVE' | 'STANDBY' | 'OFFLINE'
-  color: string
-  accent: string
-  avatar: string
-}[] = [
-  {
-    id: 'claude',
-    name: 'Claude',
-    handle: 'claude-sonnet-4-6',
-    type: 'General AI',
-    status: 'ACTIVE',
-    color: 'violet',
-    accent: '#a855f7',
-    avatar: '✦',
-  },
-  {
-    id: 'openclaw',
-    name: 'OpenClaw',
-    handle: 'research-agent',
-    type: 'Research',
-    status: 'ACTIVE',
-    color: 'cyan',
-    accent: '#06b6d4',
-    avatar: '⌖',
-  },
-  {
-    id: 'hermes',
-    name: 'Hermes',
-    handle: 'messaging-agent',
-    type: 'Messaging',
-    status: 'ACTIVE',
-    color: 'pink',
-    accent: '#ec4899',
-    avatar: '⚡',
-  },
-  {
-    id: 'nexus',
-    name: 'Nexus',
-    handle: 'orchestrator',
-    type: 'Orchestrator',
-    status: 'STANDBY',
-    color: 'amber',
-    accent: '#f59e0b',
-    avatar: '◈',
-  },
-  {
-    id: 'phantom',
-    name: 'Phantom',
-    handle: 'stealth-agent',
-    type: 'Stealth',
-    status: 'OFFLINE',
-    color: 'slate',
-    accent: '#64748b',
-    avatar: '◇',
-  },
-]
+// Re-export for backward compat
+export const AGENTS = BUILTIN_AGENTS
+export type { AgentConfig }
 
-const statusDot: Record<string, string> = {
+const STATUS_DOT: Record<string, string> = {
   ACTIVE: 'bg-emerald-400 status-dot-online',
   STANDBY: 'bg-amber-400 status-dot-standby',
   OFFLINE: 'bg-slate-600',
@@ -79,21 +25,39 @@ const statusDot: Record<string, string> = {
 interface SidebarProps {
   activeAgent: PageId
   onSelect: (id: PageId) => void
+  onCreateAgent: () => void
 }
 
-const TOOLS: { id: PageId; label: string; icon: React.ElementType; color: string }[] = [
-  { id: 'goals', label: 'Goals', icon: Target, color: '#a855f7' },
-  { id: 'journal', label: 'Journal', icon: BookOpen, color: '#10b981' },
+const CORE_NAV: { id: PageId; label: string; icon: React.ElementType; color: string }[] = [
+  { id: 'dashboard', label: 'Overview', icon: LayoutDashboard, color: '#6366f1' },
 ]
 
-export default function Sidebar({ activeAgent, onSelect }: SidebarProps) {
+const TOOLS_NAV: { id: PageId; label: string; icon: React.ElementType; color: string }[] = [
+  { id: 'goals', label: 'Goals', icon: Target, color: '#a855f7' },
+  { id: 'journal', label: 'Journal', icon: BookOpen, color: '#10b981' },
+  { id: 'orgchart', label: 'Org Chart', icon: Network, color: '#06b6d4' },
+  { id: 'crew', label: 'Crew Builder', icon: GitBranch, color: '#f59e0b' },
+]
+
+export default function Sidebar({ activeAgent, onSelect, onCreateAgent }: SidebarProps) {
+  const [customAgents, setCustomAgents] = useState<AgentConfig[]>([])
+
+  useEffect(() => {
+    setCustomAgents(getCustomAgents())
+    const onStorage = () => setCustomAgents(getCustomAgents())
+    window.addEventListener('storage', onStorage)
+    return () => window.removeEventListener('storage', onStorage)
+  }, [])
+
+  const allAgents = [...BUILTIN_AGENTS, ...customAgents]
+
   return (
     <motion.aside
       initial={{ x: -80, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
-      className="flex flex-col w-64 min-h-screen glass-panel border-r border-indigo-500/10 rounded-none"
-      style={{ borderRadius: 0, borderTop: 'none', borderBottom: 'none', borderLeft: 'none' }}
+      className="flex flex-col w-64 min-h-screen border-r border-indigo-500/10"
+      style={{ background: 'rgba(5,5,18,0.97)', borderRadius: 0 }}
     >
       {/* Logo */}
       <div className="flex items-center gap-3 px-5 py-5 border-b border-indigo-500/10">
@@ -114,121 +78,190 @@ export default function Sidebar({ activeAgent, onSelect }: SidebarProps) {
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        {/* Dashboard */}
-        <button
-          onClick={() => onSelect('dashboard')}
-          className={clsx(
-            'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group',
-            activeAgent === 'dashboard'
-              ? 'bg-indigo-500/15 text-white border border-indigo-500/25'
-              : 'text-slate-400 hover:text-white hover:bg-white/5'
-          )}
-        >
-          <LayoutDashboard className="w-4 h-4 flex-shrink-0" />
-          <span className="font-medium">Overview</span>
-          {activeAgent === 'dashboard' && (
-            <ChevronRight className="w-3 h-3 ml-auto text-indigo-400" />
-          )}
-        </button>
+      <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
+        {/* Core */}
+        {CORE_NAV.map(item => {
+          const Icon = item.icon
+          const active = activeAgent === item.id
+          return (
+            <NavButton key={item.id} active={active} color={item.color} onClick={() => onSelect(item.id)}>
+              <Icon className="w-4 h-4 flex-shrink-0" />
+              <span className="font-medium text-[13px]">{item.label}</span>
+            </NavButton>
+          )
+        })}
 
         {/* Tools section */}
-        <div className="px-3 pt-4 pb-2">
-          <span className="text-[10px] uppercase tracking-[0.3em] text-slate-600 font-semibold">Tools</span>
-        </div>
-        {TOOLS.map(tool => {
-          const Icon = tool.icon
-          const active = activeAgent === tool.id
+        <SectionLabel>Tools</SectionLabel>
+        {TOOLS_NAV.map(item => {
+          const Icon = item.icon
+          const active = activeAgent === item.id
           return (
-            <button
-              key={tool.id}
-              onClick={() => onSelect(tool.id)}
-              className={clsx(
-                'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group relative',
-                active ? 'bg-white/8 text-white' : 'text-slate-400 hover:text-white hover:bg-white/5'
-              )}
-            >
-              {active && (
-                <motion.div
-                  layoutId="active-bar"
-                  className="absolute left-0 top-1 bottom-1 w-0.5 rounded-full"
-                  style={{ background: tool.color }}
-                />
-              )}
+            <NavButton key={item.id} active={active} color={item.color} onClick={() => onSelect(item.id)}>
               <div
-                className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 border"
+                className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 border transition-all"
                 style={{
-                  background: active ? `${tool.color}18` : 'transparent',
-                  borderColor: active ? `${tool.color}35` : 'rgba(255,255,255,0.06)',
-                  color: active ? tool.color : undefined,
+                  background: active ? `${item.color}18` : 'transparent',
+                  borderColor: active ? `${item.color}35` : 'rgba(255,255,255,0.06)',
+                  color: active ? item.color : '#475569',
                 }}
               >
-                <Icon className="w-4 h-4" />
+                <Icon className="w-3.5 h-3.5" />
               </div>
-              <span className="font-semibold text-[13px]">{tool.label}</span>
-              {active && <ChevronRight className="w-3 h-3 ml-auto text-slate-500" />}
-            </button>
+              <span className="font-semibold text-[13px]">{item.label}</span>
+            </NavButton>
           )
         })}
 
         {/* Agents section */}
-        <div className="px-3 pt-4 pb-2">
+        <div className="flex items-center justify-between px-3 pt-5 pb-2">
           <span className="text-[10px] uppercase tracking-[0.3em] text-slate-600 font-semibold">Agents</span>
+          <button
+            onClick={onCreateAgent}
+            className="p-1 rounded-md text-slate-600 hover:text-violet-400 hover:bg-violet-500/10 transition-colors"
+            title="Add new agent"
+          >
+            <Plus className="w-3.5 h-3.5" />
+          </button>
         </div>
 
-        {/* Agent list */}
-        {AGENTS.map(agent => (
-          <button
+        {/* Builtin agents */}
+        {BUILTIN_AGENTS.map(agent => (
+          <AgentNavItem
             key={agent.id}
+            agent={agent}
+            active={activeAgent === agent.id}
             onClick={() => onSelect(agent.id)}
-            className={clsx(
-              'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group relative',
-              activeAgent === agent.id
-                ? 'bg-white/8 text-white'
-                : 'text-slate-400 hover:text-white hover:bg-white/5',
-              agent.status === 'OFFLINE' && 'opacity-50'
-            )}
-          >
-            {/* Active indicator bar */}
-            {activeAgent === agent.id && (
-              <motion.div
-                layoutId="active-bar"
-                className="absolute left-0 top-1 bottom-1 w-0.5 rounded-full"
-                style={{ background: agent.accent }}
-              />
-            )}
-
-            {/* Avatar */}
-            <div
-              className="w-8 h-8 rounded-xl flex items-center justify-center text-base font-bold flex-shrink-0 border"
-              style={{
-                background: `${agent.accent}18`,
-                borderColor: `${agent.accent}35`,
-                color: agent.accent,
-                textShadow: `0 0 8px ${agent.accent}`,
-              }}
-            >
-              {agent.avatar}
-            </div>
-
-            <div className="flex-1 text-left min-w-0">
-              <div className="font-semibold text-[13px] leading-tight truncate">{agent.name}</div>
-              <div className="text-[10px] text-slate-600 truncate">{agent.type}</div>
-            </div>
-
-            {/* Status dot */}
-            <span className={clsx('w-1.5 h-1.5 rounded-full flex-shrink-0', statusDot[agent.status])} />
-          </button>
+          />
         ))}
+
+        {/* Custom agents */}
+        {customAgents.length > 0 && (
+          <>
+            <SectionLabel>Custom</SectionLabel>
+            {customAgents.map(agent => (
+              <AgentNavItem
+                key={agent.id}
+                agent={agent}
+                active={activeAgent === agent.id}
+                onClick={() => onSelect(agent.id)}
+              />
+            ))}
+          </>
+        )}
+
+        {/* Add agent CTA if no custom agents */}
+        {customAgents.length === 0 && (
+          <button
+            onClick={onCreateAgent}
+            className="w-full mt-1 flex items-center gap-2 px-3 py-2 rounded-xl text-[11px] text-slate-600 hover:text-slate-400 border border-dashed border-slate-800 hover:border-slate-700 transition-all"
+          >
+            <Plus className="w-3 h-3" />
+            <span>Add custom agent</span>
+          </button>
+        )}
       </nav>
 
       {/* Footer */}
-      <div className="px-3 py-4 border-t border-indigo-500/10">
+      <div className="px-3 py-4 border-t border-indigo-500/10 space-y-0.5">
+        <button
+          onClick={() => onSelect('fleet')}
+          className={clsx(
+            'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all',
+            activeAgent === 'fleet'
+              ? 'bg-white/8 text-white'
+              : 'text-slate-500 hover:text-white hover:bg-white/5'
+          )}
+        >
+          <Users className="w-4 h-4" />
+          <span className="text-[13px]">Fleet Overview</span>
+        </button>
         <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-500 hover:text-white hover:bg-white/5 transition-all">
           <Settings className="w-4 h-4" />
-          <span>Settings</span>
+          <span className="text-[13px]">Settings</span>
         </button>
       </div>
     </motion.aside>
+  )
+}
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="px-3 pt-4 pb-1.5">
+      <span className="text-[10px] uppercase tracking-[0.3em] text-slate-600 font-semibold">{children}</span>
+    </div>
+  )
+}
+
+function NavButton({ active, color, onClick, children }: {
+  active: boolean; color: string; onClick: () => void; children: React.ReactNode
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={clsx(
+        'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-150 group relative',
+        active ? 'text-white' : 'text-slate-400 hover:text-white hover:bg-white/5'
+      )}
+      style={{ background: active ? `${color}18` : undefined }}
+    >
+      {active && (
+        <motion.div
+          layoutId="nav-active"
+          className="absolute left-0 top-1.5 bottom-1.5 w-0.5 rounded-full"
+          style={{ background: color }}
+        />
+      )}
+      {children}
+      {active && <ChevronRight className="w-3 h-3 ml-auto text-slate-600" />}
+    </button>
+  )
+}
+
+function AgentNavItem({ agent, active, onClick }: { agent: AgentConfig; active: boolean; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className={clsx(
+        'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-150 group relative',
+        active ? 'text-white' : 'text-slate-400 hover:text-white hover:bg-white/5',
+        agent.status === 'OFFLINE' && 'opacity-50'
+      )}
+      style={{ background: active ? `${agent.accent}12` : undefined }}
+    >
+      {active && (
+        <motion.div
+          layoutId="nav-active"
+          className="absolute left-0 top-1.5 bottom-1.5 w-0.5 rounded-full"
+          style={{ background: agent.accent }}
+        />
+      )}
+      <div
+        className="w-7 h-7 rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0 border"
+        style={{
+          background: active ? `${agent.accent}20` : `${agent.accent}10`,
+          borderColor: active ? `${agent.accent}40` : `${agent.accent}20`,
+          color: agent.accent,
+        }}
+      >
+        {agent.avatar}
+      </div>
+      <div className="flex-1 text-left min-w-0">
+        <div className="font-semibold text-[12px] leading-tight truncate">{agent.name}</div>
+        <div className="text-[10px] text-slate-600 truncate">{agent.type}</div>
+      </div>
+      <AnimatePresence>
+        {agent.status === 'ACTIVE' && (
+          <motion.span
+            key="dot"
+            initial={{ scale: 0 }} animate={{ scale: 1 }}
+            className="w-1.5 h-1.5 rounded-full bg-emerald-400 status-dot-online flex-shrink-0"
+          />
+        )}
+        {agent.status === 'STANDBY' && (
+          <motion.span key="standby" className="w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0" />
+        )}
+      </AnimatePresence>
+    </button>
   )
 }

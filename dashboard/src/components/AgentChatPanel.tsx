@@ -4,8 +4,8 @@ import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Play, Square, Settings2, Cpu, Zap } from 'lucide-react'
 import ChatInput from './ChatInput'
-import type { AgentId } from './Sidebar'
-import { AGENTS } from './Sidebar'
+import { getAllAgents } from '@/lib/agents'
+type AgentId = string
 import clsx from 'clsx'
 
 interface Message {
@@ -15,7 +15,7 @@ interface Message {
   ts: Date
 }
 
-const MOCK_REPLIES: Record<AgentId, string[]> = {
+const MOCK_REPLIES: Record<string, string[]> = {
   claude: ['On it.', 'Done — I found what you need.', 'Understood. Let me think through this.'],
   openclaw: [
     'Scanning web sources now…',
@@ -27,6 +27,11 @@ const MOCK_REPLIES: Record<AgentId, string[]> = {
     'Delivery confirmed across all channels.',
     'Pipeline flushed — 0 pending messages.',
   ],
+  paperclip: [
+    'Autonomous mode engaged. Starting sub-task tree.',
+    'Agent Zero executing. Memory updated.',
+    'Task complete. New capability added to registry.',
+  ],
   nexus: [
     'Orchestration graph updated.',
     'Spawning sub-agents for parallel execution.',
@@ -37,6 +42,16 @@ const MOCK_REPLIES: Record<AgentId, string[]> = {
     'Trace wiped from logs.',
     'Silent extraction complete.',
   ],
+  _default: [
+    'Processing your request…',
+    'Task received. Executing now.',
+    'Done. Ready for the next directive.',
+  ],
+}
+
+function getMockReply(agentId: string): string {
+  const replies = MOCK_REPLIES[agentId] ?? MOCK_REPLIES._default
+  return replies[Math.floor(Math.random() * replies.length)]
 }
 
 function TypingIndicator({ accent }: { accent: string }) {
@@ -54,7 +69,11 @@ function TypingIndicator({ accent }: { accent: string }) {
 }
 
 export default function AgentChatPanel({ agentId }: { agentId: AgentId }) {
-  const agent = AGENTS.find(a => a.id === agentId)!
+  const agent = getAllAgents().find(a => a.id === agentId) ?? {
+    id: agentId, name: agentId, avatar: '?', accent: '#6366f1',
+    status: 'STANDBY' as const, type: 'Unknown', handle: agentId,
+    endpoint: '', description: '', isBuiltin: false,
+  }
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '0',
@@ -134,8 +153,7 @@ export default function AgentChatPanel({ agentId }: { agentId: AgentId }) {
 
     // Mock replies for all other agents
     await new Promise(r => setTimeout(r, 800 + Math.random() * 1200))
-    const replies = MOCK_REPLIES[agentId]
-    const reply = replies[Math.floor(Math.random() * replies.length)]
+    const reply = getMockReply(agentId)
 
     setLoading(false)
     setMessages(prev => [
