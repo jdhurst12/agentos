@@ -147,7 +147,7 @@ function TopBar({
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
-            className="absolute inset-0 border border-violet-500/50 rounded-lg"
+            className="absolute inset-0 border border-blue-500/50 rounded-lg"
             style={{ borderRadius: 6 }}
           />
           <Terminal className="w-3 h-3 text-blue-400 relative z-10" />
@@ -202,7 +202,7 @@ function TopBar({
       {/* ⌘K palette trigger */}
       <button
         onClick={onPalette}
-        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-[10px] text-slate-500 hover:text-white hover:border-violet-500/50 hover:bg-violet-500/10 transition-all"
+        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-[10px] text-slate-500 hover:text-white hover:border-blue-500/50 hover:bg-blue-500/10 transition-all"
         style={{ borderColor: 'rgba(255,255,255,0.1)' }}
         title="Command palette (⌘K)"
       >
@@ -217,7 +217,7 @@ function TopBar({
 
 const QUICK_ACTIONS = [
   { id: 'fleet',    label: 'Fleet Overview',    icon: Layers,      color: '#06b6d4' },
-  { id: 'memory',   label: 'Memory',             icon: Brain,       color: '#8b5cf6' },
+  { id: 'memory',   label: 'Memory',             icon: Brain,       color: '#3b82f6' },
   { id: 'orgchart', label: 'Org Chart',           icon: Network,     color: '#06b6d4' },
   { id: 'crew',     label: 'Crew Builder',        icon: GitBranch,   color: '#f59e0b' },
   { id: 'goals',    label: 'Goals',               icon: Target,      color: '#3b82f6' },
@@ -413,7 +413,7 @@ const EVENT_LABELS: Record<ActivityEvent['type'], string> = {
 }
 
 const EVENT_COLORS: Record<ActivityEvent['type'], string> = {
-  sent: '#6366f1',
+  sent: '#3b82f6',
   received: '',  // uses agent accent
   online: '#10b981',
   offline: '#64748b',
@@ -479,8 +479,8 @@ function ActivityFeed({ events }: { events: ActivityEvent[] }) {
                     <span
                       className="text-[8px] px-1 py-0.5 rounded font-mono uppercase leading-none"
                       style={{
-                        background: `${ev.type === 'received' ? ev.accent : (EVENT_COLORS[ev.type] || '#6366f1')}18`,
-                        color: ev.type === 'received' ? ev.accent : (EVENT_COLORS[ev.type] || '#6366f1'),
+                        background: `${ev.type === 'received' ? ev.accent : (EVENT_COLORS[ev.type] || '#3b82f6')}18`,
+                        color: ev.type === 'received' ? ev.accent : (EVENT_COLORS[ev.type] || '#3b82f6'),
                       }}
                     >
                       {EVENT_LABELS[ev.type]}
@@ -525,10 +525,10 @@ function AgentAddCard({ onAdd }: { onAdd?: () => void }) {
         style={{ background: 'rgba(59,130,246,0.1)', borderColor: 'rgba(59,130,246,0.25)' }}
         whileHover={{ background: 'rgba(59,130,246,0.2)', borderColor: 'rgba(59,130,246,0.5)' }}
       >
-        <Plus className="w-6 h-6 text-blue-400 group-hover:text-violet-300 transition-colors" />
+        <Plus className="w-6 h-6 text-blue-400 group-hover:text-blue-300 transition-colors" />
       </motion.div>
       <div className="text-center space-y-0.5">
-        <div className="text-xs font-bold text-slate-500 group-hover:text-violet-300 transition-colors tracking-wide">
+        <div className="text-xs font-bold text-slate-500 group-hover:text-blue-300 transition-colors tracking-wide">
           Add Agent
         </div>
         <div className="text-[10px] text-slate-700">Connect a new AI agent</div>
@@ -934,7 +934,7 @@ export default function MissionControl({
   onOpenAgent?: (id: string) => void
   onCreateAgent?: () => void
 }) {
-  const [agents, setAgents] = useState<AgentConfig[]>([])
+  const [agents, setAgents] = useState<AgentConfig[]>(() => getAllAgents())
   const [showPalette, setShowPalette] = useState(false)
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [activityEvents, setActivityEvents] = useState<ActivityEvent[]>([])
