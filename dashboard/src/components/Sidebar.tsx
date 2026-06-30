@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Hexagon, Zap, LayoutDashboard, Settings, ChevronRight,
-  Target, BookOpen, Network, Plus, Users, GitBranch,
+  Target, BookOpen, Network, Plus, Users, GitBranch, Brain,
 } from 'lucide-react'
 import clsx from 'clsx'
 import { BUILTIN_AGENTS, getCustomAgents, type AgentConfig } from '@/lib/agents'
@@ -37,6 +37,7 @@ const TOOLS_NAV: { id: PageId; label: string; icon: React.ElementType; color: st
   { id: 'journal', label: 'Journal', icon: BookOpen, color: '#10b981' },
   { id: 'orgchart', label: 'Org Chart', icon: Network, color: '#06b6d4' },
   { id: 'crew', label: 'Crew Builder', icon: GitBranch, color: '#f59e0b' },
+  { id: 'memory', label: 'Memory', icon: Brain, color: '#8b5cf6' },
 ]
 
 export default function Sidebar({ activeAgent, onSelect, onCreateAgent }: SidebarProps) {

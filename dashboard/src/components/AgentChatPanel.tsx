@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Play, Square, Settings2, Cpu, Zap, Wifi, WifiOff } from 'lucide-react'
+import { Play, Square, Settings2, Cpu, Zap, Wifi, WifiOff, BookmarkPlus, Check } from 'lucide-react'
 import ChatInput from './ChatInput'
 import { getAllAgents } from '@/lib/agents'
 type AgentId = string
@@ -62,6 +62,29 @@ async function streamAgentReply(
       } catch { /* ignore */ }
     }
   }
+}
+
+function SaveButton({ content, agentId }: { content: string; agentId: string }) {
+  const [saved, setSaved] = useState(false)
+  const save = async () => {
+    if (saved || !content.trim()) return
+    await fetch('/api/memory', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content, agentId, type: 'conversation', tags: [] }),
+    })
+    setSaved(true)
+    setTimeout(() => setSaved(false), 2000)
+  }
+  return (
+    <button
+      onClick={save}
+      className="opacity-0 group-hover:opacity-100 transition-opacity mt-1 p-1 rounded text-slate-700 hover:text-violet-400 hover:bg-violet-500/10"
+      title="Save to memory"
+    >
+      {saved ? <Check className="w-3 h-3 text-emerald-400" /> : <BookmarkPlus className="w-3 h-3" />}
+    </button>
+  )
 }
 
 export default function AgentChatPanel({ agentId }: { agentId: AgentId }) {
@@ -228,7 +251,7 @@ export default function AgentChatPanel({ agentId }: { agentId: AgentId }) {
                   {agent.avatar}
                 </div>
               )}
-              <div className={`max-w-[78%] flex flex-col gap-1 ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
+              <div className={`max-w-[78%] flex flex-col gap-1 ${m.role === 'user' ? 'items-end' : 'items-start'} group`}>
                 <div
                   className="px-4 py-2.5 rounded-2xl text-sm leading-relaxed"
                   style={
@@ -244,7 +267,10 @@ export default function AgentChatPanel({ agentId }: { agentId: AgentId }) {
                 >
                   {m.content || <span className="opacity-30">…</span>}
                 </div>
-                <span className="text-[10px] text-slate-600 px-1 font-mono">{fmt(m.ts)}</span>
+                <div className="flex items-center gap-1">
+                  <span className="text-[10px] text-slate-600 px-1 font-mono">{fmt(m.ts)}</span>
+                  {m.role === 'agent' && m.content && <SaveButton content={m.content} agentId={agentId} />}
+                </div>
               </div>
             </motion.div>
           ))}

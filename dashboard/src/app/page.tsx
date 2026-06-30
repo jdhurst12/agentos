@@ -14,6 +14,7 @@ import JournalPage from '@/components/JournalPage'
 import OrgChart from '@/components/OrgChart'
 import CrewBuilder from '@/components/CrewBuilder'
 import AgentCreator from '@/components/AgentCreator'
+import MemoryPanel from '@/components/MemoryPanel'
 import { getAllAgents, type AgentConfig } from '@/lib/agents'
 
 const pageVariants = {
@@ -54,7 +55,7 @@ export default function DashboardPage() {
 
   // Pages where we show the full-height layout
   const isAgentPage = !!activeAgent
-  const isToolPage = ['goals', 'journal', 'orgchart', 'crew', 'fleet'].includes(activePage)
+  const isToolPage = ['goals', 'journal', 'orgchart', 'crew', 'fleet', 'memory'].includes(activePage)
 
   return (
     <div className="min-h-screen flex">
@@ -129,6 +130,13 @@ export default function DashboardPage() {
           {activePage === 'crew' && (
             <motion.div key="crew" {...pageVariants} className="flex-1 flex overflow-hidden">
               <CrewBuilder />
+            </motion.div>
+          )}
+
+          {/* ── Memory ── */}
+          {activePage === 'memory' && (
+            <motion.div key="memory" {...pageVariants} className="flex-1 flex flex-col overflow-hidden">
+              <MemoryPanel />
             </motion.div>
           )}
 
