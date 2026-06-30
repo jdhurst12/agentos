@@ -1,10 +1,12 @@
 'use client'
 
+import React from 'react'
 import { motion } from 'framer-motion'
-import { Hexagon, Zap, LayoutDashboard, Settings, ChevronRight } from 'lucide-react'
+import { Hexagon, Zap, LayoutDashboard, Settings, ChevronRight, Target, BookOpen } from 'lucide-react'
 import clsx from 'clsx'
 
 export type AgentId = 'claude' | 'openclaw' | 'hermes' | 'nexus' | 'phantom'
+export type PageId = AgentId | 'dashboard' | 'goals' | 'journal'
 
 export const AGENTS: {
   id: AgentId
@@ -75,9 +77,14 @@ const statusDot: Record<string, string> = {
 }
 
 interface SidebarProps {
-  activeAgent: AgentId | 'dashboard'
-  onSelect: (id: AgentId | 'dashboard') => void
+  activeAgent: PageId
+  onSelect: (id: PageId) => void
 }
+
+const TOOLS: { id: PageId; label: string; icon: React.ElementType; color: string }[] = [
+  { id: 'goals', label: 'Goals', icon: Target, color: '#a855f7' },
+  { id: 'journal', label: 'Journal', icon: BookOpen, color: '#10b981' },
+]
 
 export default function Sidebar({ activeAgent, onSelect }: SidebarProps) {
   return (
@@ -125,7 +132,46 @@ export default function Sidebar({ activeAgent, onSelect }: SidebarProps) {
           )}
         </button>
 
-        {/* Section label */}
+        {/* Tools section */}
+        <div className="px-3 pt-4 pb-2">
+          <span className="text-[10px] uppercase tracking-[0.3em] text-slate-600 font-semibold">Tools</span>
+        </div>
+        {TOOLS.map(tool => {
+          const Icon = tool.icon
+          const active = activeAgent === tool.id
+          return (
+            <button
+              key={tool.id}
+              onClick={() => onSelect(tool.id)}
+              className={clsx(
+                'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group relative',
+                active ? 'bg-white/8 text-white' : 'text-slate-400 hover:text-white hover:bg-white/5'
+              )}
+            >
+              {active && (
+                <motion.div
+                  layoutId="active-bar"
+                  className="absolute left-0 top-1 bottom-1 w-0.5 rounded-full"
+                  style={{ background: tool.color }}
+                />
+              )}
+              <div
+                className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 border"
+                style={{
+                  background: active ? `${tool.color}18` : 'transparent',
+                  borderColor: active ? `${tool.color}35` : 'rgba(255,255,255,0.06)',
+                  color: active ? tool.color : undefined,
+                }}
+              >
+                <Icon className="w-4 h-4" />
+              </div>
+              <span className="font-semibold text-[13px]">{tool.label}</span>
+              {active && <ChevronRight className="w-3 h-3 ml-auto text-slate-500" />}
+            </button>
+          )
+        })}
+
+        {/* Agents section */}
         <div className="px-3 pt-4 pb-2">
           <span className="text-[10px] uppercase tracking-[0.3em] text-slate-600 font-semibold">Agents</span>
         </div>
