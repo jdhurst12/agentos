@@ -1,10 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { writeFile, mkdir, readFile } from 'fs/promises'
 import { existsSync } from 'fs'
+import { homedir } from 'os'
 import path from 'path'
+import { getConfig } from '@/lib/config'
 
-const VAULT_DIR = process.env.OBSIDIAN_VAULT_DIR
-  ?? path.join(process.env.HOME ?? '/tmp', 'agentos', 'obsidian-sync', 'Agent Memory')
+function resolveVaultDir(): string {
+  if (process.env.OBSIDIAN_VAULT_DIR) return process.env.OBSIDIAN_VAULT_DIR
+  const cfgDir = getConfig().obsidian.vaultDir
+  if (cfgDir) return cfgDir.startsWith('~/') ? path.join(homedir(), cfgDir.slice(2)) : cfgDir
+  return path.join(homedir(), 'agentos', 'obsidian-sync', 'Agent Memory')
+}
+
+const VAULT_DIR = resolveVaultDir()
 
 function todayStr() {
   return new Date().toISOString().split('T')[0]

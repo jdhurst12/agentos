@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server'
 import { spawn } from 'child_process'
+import { getConfig } from '@/lib/config'
 
 export const runtime = 'nodejs'
 
@@ -32,8 +33,9 @@ export async function POST(req: NextRequest) {
       // Try to spawn the Claude CLI
       let claudeProcess: ReturnType<typeof spawn> | null = null
 
+      const cliPath = getConfig().claude.cliPath || 'claude'
       try {
-        claudeProcess = spawn('claude', ['-p', message, '--output-format', 'stream-json', '--verbose'], {
+        claudeProcess = spawn(cliPath, ['-p', message, '--output-format', 'stream-json', '--verbose'], {
           env: process.env,
           stdio: ['ignore', 'pipe', 'pipe'],
         })
