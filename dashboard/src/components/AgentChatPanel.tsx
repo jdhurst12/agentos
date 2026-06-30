@@ -83,7 +83,56 @@ export default function AgentChatPanel({ agentId }: { agentId: AgentId }) {
     setMessages(prev => [...prev, userMsg])
     setLoading(true)
 
-    // Simulate agent response
+    if (agentId === 'openclaw') {
+      // Real OpenClaw integration via WebSocket gateway
+      try {
+        const res = await fetch('/api/openclaw', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text }),
+        })
+        if (!res.ok || !res.body) throw new Error('Stream failed')
+
+        const agentMsgId = (Date.now() + 1).toString()
+        setMessages(prev => [...prev, { id: agentMsgId, role: 'agent', content: '', ts: new Date() }])
+        setLoading(false)
+
+        const reader = res.body.getReader()
+        const decoder = new TextDecoder()
+        let buf = ''
+
+        while (true) {
+          const { done, value } = await reader.read()
+          if (done) break
+          buf += decoder.decode(value, { stream: true })
+          const parts = buf.split('\n\n')
+          buf = parts.pop() ?? ''
+          for (const part of parts) {
+            if (!part.startsWith('data:')) continue
+            const raw = part.slice(5).trim()
+            if (raw === '[DONE]') break
+            try {
+              const { text: chunk } = JSON.parse(raw)
+              if (chunk) {
+                setMessages(prev =>
+                  prev.map(m => m.id === agentMsgId ? { ...m, content: m.content + chunk } : m)
+                )
+              }
+            } catch { /* ignore */ }
+          }
+        }
+        return
+      } catch {
+        setLoading(false)
+        setMessages(prev => [
+          ...prev,
+          { id: (Date.now() + 1).toString(), role: 'agent', content: 'OpenClaw is unreachable. Make sure the daemon is running (`openclaw onboard --install-daemon`).', ts: new Date() },
+        ])
+        return
+      }
+    }
+
+    // Mock replies for all other agents
     await new Promise(r => setTimeout(r, 800 + Math.random() * 1200))
     const replies = MOCK_REPLIES[agentId]
     const reply = replies[Math.floor(Math.random() * replies.length)]
