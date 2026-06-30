@@ -45,13 +45,13 @@ export async function GET() {
   // Parse wikilinks [[Note Title]] from content
   const links: RawLink[] = []
   const titleToId = new Map<string, string>()
-  for (const [id, node] of nodeMap) titleToId.set(node.title.toLowerCase(), id)
+  Array.from(nodeMap.entries()).forEach(([id, node]) => titleToId.set(node.title.toLowerCase(), id))
 
   for (const f of files) {
     const src = f.rel.replace(/\.md$/, '')
     try {
       const content = readFileSync(f.path, 'utf8')
-      const matches = content.matchAll(/\[\[([^\]|#]+)(?:[|#][^\]]*)?\]\]/g)
+      const matches = Array.from(content.matchAll(/\[\[([^\]|#]+)(?:[|#][^\]]*)?\]\]/g))
       for (const m of matches) {
         const target = titleToId.get(m[1].trim().toLowerCase())
         if (target && target !== src) {
