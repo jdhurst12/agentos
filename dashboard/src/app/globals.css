@@ -183,6 +183,67 @@ body {
   30% { transform: translateY(-8px); opacity: 1; }
 }
 
+/* Aurora orbs */
+.aurora-orb {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.aurora-orb-1 {
+  top: -25%;
+  left: -12%;
+  width: 65vw;
+  height: 65vh;
+  background: radial-gradient(ellipse, rgba(124, 58, 237, 0.11) 0%, transparent 70%);
+  animation: aurora-1 22s ease-in-out infinite alternate;
+}
+
+.aurora-orb-2 {
+  top: -18%;
+  right: -12%;
+  width: 55vw;
+  height: 55vh;
+  background: radial-gradient(ellipse, rgba(6, 182, 212, 0.08) 0%, transparent 70%);
+  animation: aurora-2 28s ease-in-out infinite alternate;
+}
+
+.aurora-orb-3 {
+  bottom: -20%;
+  left: 25%;
+  width: 50vw;
+  height: 45vh;
+  background: radial-gradient(ellipse, rgba(16, 185, 129, 0.06) 0%, transparent 70%);
+  animation: aurora-3 34s ease-in-out infinite alternate;
+}
+
+@keyframes aurora-1 {
+  0%   { transform: translate(0, 0) scale(1) rotate(0deg); }
+  50%  { transform: translate(6%, 9%) scale(1.18) rotate(6deg); }
+  100% { transform: translate(-4%, 5%) scale(0.92) rotate(-4deg); }
+}
+
+@keyframes aurora-2 {
+  0%   { transform: translate(0, 0) scale(1) rotate(0deg); }
+  50%  { transform: translate(-9%, 6%) scale(1.22) rotate(-9deg); }
+  100% { transform: translate(6%, -4%) scale(0.88) rotate(5deg); }
+}
+
+@keyframes aurora-3 {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(8%, -12%) scale(1.15); }
+  100% { transform: translate(-5%, 7%) scale(1.06); }
+}
+
+/* Command palette kbd */
+kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: ui-monospace, monospace;
+}
+
 /* Progress ring */
 .progress-ring-circle {
   transition: stroke-dashoffset 0.8s ease-in-out;

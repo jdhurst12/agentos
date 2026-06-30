@@ -71,7 +71,7 @@ export default function DashboardPage() {
               transition={{ duration: 0.2 }}
               className="flex-1 flex flex-col overflow-hidden min-h-0"
             >
-              <MissionControl onOpenAgent={setActivePage} />
+              <MissionControl onOpenAgent={setActivePage} onCreateAgent={handleCreateAgent} />
             </motion.div>
           )}
 
