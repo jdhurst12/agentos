@@ -1,0 +1,256 @@
+'use client'
+
+import { useState, useRef, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Play, Square, Settings2, Cpu, Zap } from 'lucide-react'
+import ChatInput from './ChatInput'
+import type { AgentId } from './Sidebar'
+import { AGENTS } from './Sidebar'
+import clsx from 'clsx'
+
+interface Message {
+  id: string
+  role: 'user' | 'agent'
+  content: string
+  ts: Date
+}
+
+const MOCK_REPLIES: Record<AgentId, string[]> = {
+  claude: ['On it.', 'Done — I found what you need.', 'Understood. Let me think through this.'],
+  openclaw: [
+    'Scanning web sources now…',
+    'Found 12 relevant documents. Summarizing key insights.',
+    'Research complete. Top findings attached.',
+  ],
+  hermes: [
+    'Message routed successfully.',
+    'Delivery confirmed across all channels.',
+    'Pipeline flushed — 0 pending messages.',
+  ],
+  nexus: [
+    'Orchestration graph updated.',
+    'Spawning sub-agents for parallel execution.',
+    'All nodes synchronized.',
+  ],
+  phantom: [
+    'Shadow mode engaged.',
+    'Trace wiped from logs.',
+    'Silent extraction complete.',
+  ],
+}
+
+function TypingIndicator({ accent }: { accent: string }) {
+  return (
+    <div className="flex items-center gap-1 px-4 py-3">
+      {[0, 1, 2].map(i => (
+        <span
+          key={i}
+          className="typing-dot w-1.5 h-1.5 rounded-full"
+          style={{ background: accent, animationDelay: `${i * 0.15}s` }}
+        />
+      ))}
+    </div>
+  )
+}
+
+export default function AgentChatPanel({ agentId }: { agentId: AgentId }) {
+  const agent = AGENTS.find(a => a.id === agentId)!
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: '0',
+      role: 'agent',
+      content: `${agent.name} online. Ready to assist.`,
+      ts: new Date(),
+    },
+  ])
+  const [loading, setLoading] = useState(false)
+  const [running, setRunning] = useState(agent.status === 'ACTIVE')
+  const bottomRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages, loading])
+
+  const send = async (text: string) => {
+    if (!running) return
+    const userMsg: Message = { id: Date.now().toString(), role: 'user', content: text, ts: new Date() }
+    setMessages(prev => [...prev, userMsg])
+    setLoading(true)
+
+    // Simulate agent response
+    await new Promise(r => setTimeout(r, 800 + Math.random() * 1200))
+    const replies = MOCK_REPLIES[agentId]
+    const reply = replies[Math.floor(Math.random() * replies.length)]
+
+    setLoading(false)
+    setMessages(prev => [
+      ...prev,
+      { id: (Date.now() + 1).toString(), role: 'agent', content: reply, ts: new Date() },
+    ])
+  }
+
+  const fmt = (d: Date) =>
+    d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })
+
+  const statusColor = running ? 'text-emerald-400' : 'text-slate-500'
+  const statusDotClass = running ? 'bg-emerald-400 status-dot-online' : 'bg-slate-600'
+
+  return (
+    <div className="glass-panel flex flex-col h-full min-h-0 overflow-hidden">
+      {/* Header */}
+      <div className="flex items-center gap-3 px-4 py-3 border-b border-indigo-500/15 flex-shrink-0">
+        <div
+          className="w-9 h-9 rounded-xl flex items-center justify-center text-lg font-bold border flex-shrink-0"
+          style={{
+            background: `${agent.accent}18`,
+            borderColor: `${agent.accent}35`,
+            color: agent.accent,
+            textShadow: `0 0 8px ${agent.accent}`,
+          }}
+        >
+          {agent.avatar}
+        </div>
+
+        <div className="flex-1 min-w-0">
+          <div className="font-semibold text-white text-sm">{agent.name}</div>
+          <div className="text-[10px] text-slate-500">{agent.handle} · {agent.type}</div>
+        </div>
+
+        {/* Status */}
+        <div
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border"
+          style={{
+            background: running ? 'rgba(16,185,129,0.1)' : 'rgba(100,116,139,0.1)',
+            borderColor: running ? 'rgba(16,185,129,0.2)' : 'rgba(100,116,139,0.2)',
+          }}
+        >
+          <span className={clsx('w-1.5 h-1.5 rounded-full', statusDotClass)} />
+          <span className={clsx('text-[10px] font-medium tracking-widest uppercase', statusColor)}>
+            {running ? 'Active' : 'Offline'}
+          </span>
+        </div>
+
+        {/* Controls */}
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => setRunning(r => !r)}
+            className={clsx(
+              'p-1.5 rounded-lg transition-colors',
+              running
+                ? 'text-slate-500 hover:text-red-400 hover:bg-red-500/10'
+                : 'text-slate-500 hover:text-emerald-400 hover:bg-emerald-500/10'
+            )}
+            title={running ? 'Stop agent' : 'Start agent'}
+          >
+            {running ? <Square className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+          </button>
+          <button className="p-1.5 rounded-lg text-slate-500 hover:text-violet-400 hover:bg-violet-500/10 transition-colors">
+            <Settings2 className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      </div>
+
+      {/* Agent stats strip */}
+      <div className="flex items-center gap-4 px-4 py-2 border-b border-white/5 bg-white/2">
+        <StatChip icon={<Cpu className="w-3 h-3" />} label="Tasks" value="7" accent={agent.accent} />
+        <StatChip icon={<Zap className="w-3 h-3" />} label="Completed" value="43" accent={agent.accent} />
+        <div className="ml-auto text-[10px] text-slate-600 font-mono">
+          last active 2m ago
+        </div>
+      </div>
+
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 min-h-0">
+        <AnimatePresence initial={false}>
+          {messages.map(m => (
+            <motion.div
+              key={m.id}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25 }}
+              className={`flex gap-3 ${m.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
+            >
+              {m.role === 'agent' && (
+                <div
+                  className="w-7 h-7 rounded-lg flex-shrink-0 flex items-center justify-center text-sm border mt-0.5"
+                  style={{
+                    background: `${agent.accent}15`,
+                    borderColor: `${agent.accent}30`,
+                    color: agent.accent,
+                  }}
+                >
+                  {agent.avatar}
+                </div>
+              )}
+              <div className={`max-w-[78%] flex flex-col gap-1 ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
+                <div
+                  className="px-4 py-2.5 rounded-2xl text-sm leading-relaxed"
+                  style={
+                    m.role === 'user'
+                      ? { background: `${agent.accent}20`, border: `1px solid ${agent.accent}30`, color: '#e2e8f0' }
+                      : {
+                          background: 'rgba(15,15,35,0.7)',
+                          border: '1px solid rgba(99,102,241,0.15)',
+                          color: '#cbd5e1',
+                          borderLeft: `2px solid ${agent.accent}40`,
+                        }
+                  }
+                >
+                  {m.content}
+                </div>
+                <span className="text-[10px] text-slate-600 px-1 font-mono">{fmt(m.ts)}</span>
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+
+        {loading && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-3">
+            <div
+              className="w-7 h-7 rounded-lg flex-shrink-0 flex items-center justify-center text-sm border mt-0.5"
+              style={{ background: `${agent.accent}15`, borderColor: `${agent.accent}30`, color: agent.accent }}
+            >
+              {agent.avatar}
+            </div>
+            <div className="glass-panel rounded-2xl" style={{ borderLeft: `2px solid ${agent.accent}40` }}>
+              <TypingIndicator accent={agent.accent} />
+            </div>
+          </motion.div>
+        )}
+        <div ref={bottomRef} />
+      </div>
+
+      {/* Input */}
+      <div className="px-4 pb-4 pt-2 flex-shrink-0">
+        {running ? (
+          <ChatInput
+            onSend={send}
+            disabled={loading}
+            accent={agent.accent}
+            placeholder={`Message ${agent.name}…`}
+          />
+        ) : (
+          <div className="flex items-center justify-center py-4 text-sm text-slate-600">
+            Agent is offline.{' '}
+            <button
+              className="ml-2 text-emerald-500 hover:text-emerald-400 transition-colors"
+              onClick={() => setRunning(true)}
+            >
+              Start it →
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function StatChip({ icon, label, value, accent }: { icon: React.ReactNode; label: string; value: string; accent: string }) {
+  return (
+    <div className="flex items-center gap-1.5 text-[11px]">
+      <span style={{ color: accent }}>{icon}</span>
+      <span className="text-slate-600">{label}</span>
+      <span className="text-slate-300 font-mono font-semibold tabular-nums">{value}</span>
+    </div>
+  )
+}
