@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   Hexagon, Zap, LayoutDashboard, Settings, ChevronRight,
   Target, BookOpen, Network, Plus, Users, GitBranch, Brain,
+  Eye, Layers, Workflow,
 } from 'lucide-react'
 import clsx from 'clsx'
 import { BUILTIN_AGENTS, getCustomAgents, type AgentConfig } from '@/lib/agents'
@@ -33,6 +34,9 @@ const CORE_NAV: { id: PageId; label: string; icon: React.ElementType; color: str
 ]
 
 const TOOLS_NAV: { id: PageId; label: string; icon: React.ElementType; color: string }[] = [
+  { id: 'radar', label: 'Radar', icon: Eye, color: '#c4607e' },
+  { id: 'fusion', label: 'Fusion', icon: Layers, color: '#d4a574' },
+  { id: 'pipeline', label: 'Pipeline', icon: Workflow, color: '#5ab896' },
   { id: 'goals', label: 'Goals', icon: Target, color: '#a855f7' },
   { id: 'journal', label: 'Journal', icon: BookOpen, color: '#10b981' },
   { id: 'orgchart', label: 'Org Chart', icon: Network, color: '#06b6d4' },

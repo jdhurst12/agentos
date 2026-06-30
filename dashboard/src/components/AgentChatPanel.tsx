@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Play, Square, Settings2, Cpu, Zap, Wifi, WifiOff, BookmarkPlus, Check } from 'lucide-react'
 import ChatInput from './ChatInput'
+import HermesPet from './HermesPet'
 import { getAllAgents } from '@/lib/agents'
 type AgentId = string
 import clsx from 'clsx'
@@ -156,17 +157,21 @@ export default function AgentChatPanel({ agentId }: { agentId: AgentId }) {
     <div className="glass-panel flex flex-col h-full min-h-0 overflow-hidden">
       {/* Header */}
       <div className="flex items-center gap-3 px-4 py-3 border-b border-indigo-500/15 flex-shrink-0">
-        <div
-          className="w-9 h-9 rounded-xl flex items-center justify-center text-lg font-bold border flex-shrink-0"
-          style={{
-            background: `${agent.accent}18`,
-            borderColor: `${agent.accent}35`,
-            color: agent.accent,
-            textShadow: `0 0 8px ${agent.accent}`,
-          }}
-        >
-          {agent.avatar}
-        </div>
+        {agentId === 'hermes' ? (
+          <HermesPet mood={loading ? 'running' : online === false ? 'failed' : 'idle'} size={36} />
+        ) : (
+          <div
+            className="w-9 h-9 rounded-xl flex items-center justify-center text-lg font-bold border flex-shrink-0"
+            style={{
+              background: `${agent.accent}18`,
+              borderColor: `${agent.accent}35`,
+              color: agent.accent,
+              textShadow: `0 0 8px ${agent.accent}`,
+            }}
+          >
+            {agent.avatar}
+          </div>
+        )}
 
         <div className="flex-1 min-w-0">
           <div className="font-semibold text-white text-sm">{agent.name}</div>
