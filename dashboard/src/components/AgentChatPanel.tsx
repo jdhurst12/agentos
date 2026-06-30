@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Play, Square, Settings2, Cpu, Zap } from 'lucide-react'
+import { Play, Square, Settings2, Cpu, Zap, Wifi, WifiOff } from 'lucide-react'
 import ChatInput from './ChatInput'
 import { getAllAgents } from '@/lib/agents'
 type AgentId = string
@@ -13,45 +13,6 @@ interface Message {
   role: 'user' | 'agent'
   content: string
   ts: Date
-}
-
-const MOCK_REPLIES: Record<string, string[]> = {
-  claude: ['On it.', 'Done — I found what you need.', 'Understood. Let me think through this.'],
-  openclaw: [
-    'Scanning web sources now…',
-    'Found 12 relevant documents. Summarizing key insights.',
-    'Research complete. Top findings attached.',
-  ],
-  hermes: [
-    'Message routed successfully.',
-    'Delivery confirmed across all channels.',
-    'Pipeline flushed — 0 pending messages.',
-  ],
-  paperclip: [
-    'Autonomous mode engaged. Starting sub-task tree.',
-    'Agent Zero executing. Memory updated.',
-    'Task complete. New capability added to registry.',
-  ],
-  nexus: [
-    'Orchestration graph updated.',
-    'Spawning sub-agents for parallel execution.',
-    'All nodes synchronized.',
-  ],
-  phantom: [
-    'Shadow mode engaged.',
-    'Trace wiped from logs.',
-    'Silent extraction complete.',
-  ],
-  _default: [
-    'Processing your request…',
-    'Task received. Executing now.',
-    'Done. Ready for the next directive.',
-  ],
-}
-
-function getMockReply(agentId: string): string {
-  const replies = MOCK_REPLIES[agentId] ?? MOCK_REPLIES._default
-  return replies[Math.floor(Math.random() * replies.length)]
 }
 
 function TypingIndicator({ accent }: { accent: string }) {
@@ -68,29 +29,69 @@ function TypingIndicator({ accent }: { accent: string }) {
   )
 }
 
+async function streamAgentReply(
+  agentId: string,
+  endpoint: string,
+  message: string,
+  onChunk: (chunk: string) => void,
+): Promise<void> {
+  const res = await fetch(`/api/agent/${agentId}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message, endpoint }),
+  })
+  if (!res.ok || !res.body) throw new Error(`HTTP ${res.status}`)
+
+  const reader = res.body.getReader()
+  const decoder = new TextDecoder()
+  let buf = ''
+
+  while (true) {
+    const { done, value } = await reader.read()
+    if (done) break
+    buf += decoder.decode(value, { stream: true })
+    const parts = buf.split('\n\n')
+    buf = parts.pop() ?? ''
+    for (const part of parts) {
+      if (!part.startsWith('data:')) continue
+      const raw = part.slice(5).trim()
+      if (raw === '[DONE]') return
+      try {
+        const { text } = JSON.parse(raw)
+        if (text) onChunk(text)
+      } catch { /* ignore */ }
+    }
+  }
+}
+
 export default function AgentChatPanel({ agentId }: { agentId: AgentId }) {
   const agent = getAllAgents().find(a => a.id === agentId) ?? {
     id: agentId, name: agentId, avatar: '?', accent: '#6366f1',
     status: 'STANDBY' as const, type: 'Unknown', handle: agentId,
     endpoint: '', description: '', isBuiltin: false,
   }
+
   const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '0',
-      role: 'agent',
-      content: `${agent.name} online. Ready to assist.`,
-      ts: new Date(),
-    },
+    { id: '0', role: 'agent', content: `${agent.name} online. Ready to assist.`, ts: new Date() },
   ])
   const [loading, setLoading] = useState(false)
   const [running, setRunning] = useState(agent.status === 'ACTIVE')
+  const [online, setOnline] = useState<boolean | null>(null)
+  const bottomRef = useRef<HTMLDivElement>(null)
 
-  // Reset running state if the agent prop changes (e.g. sidebar navigation recycles the component)
   useEffect(() => {
     setRunning(agent.status === 'ACTIVE')
     setLoading(false)
   }, [agentId, agent.status])
-  const bottomRef = useRef<HTMLDivElement>(null)
+
+  // Ping agent health on mount / agent change
+  useEffect(() => {
+    setOnline(null)
+    fetch(`/api/agent/${agentId}`)
+      .then(r => r.json())
+      .then(d => setOnline(d.online ?? false))
+      .catch(() => setOnline(false))
+  }, [agentId])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -102,64 +103,24 @@ export default function AgentChatPanel({ agentId }: { agentId: AgentId }) {
     setMessages(prev => [...prev, userMsg])
     setLoading(true)
 
-    if (agentId === 'openclaw') {
-      // Real OpenClaw integration via WebSocket gateway
-      try {
-        const res = await fetch('/api/openclaw', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: text }),
-        })
-        if (!res.ok || !res.body) throw new Error('Stream failed')
-
-        const agentMsgId = (Date.now() + 1).toString()
-        setMessages(prev => [...prev, { id: agentMsgId, role: 'agent', content: '', ts: new Date() }])
-        setLoading(false)
-
-        const reader = res.body.getReader()
-        const decoder = new TextDecoder()
-        let buf = ''
-
-        while (true) {
-          const { done, value } = await reader.read()
-          if (done) break
-          buf += decoder.decode(value, { stream: true })
-          const parts = buf.split('\n\n')
-          buf = parts.pop() ?? ''
-          for (const part of parts) {
-            if (!part.startsWith('data:')) continue
-            const raw = part.slice(5).trim()
-            if (raw === '[DONE]') break
-            try {
-              const { text: chunk } = JSON.parse(raw)
-              if (chunk) {
-                setMessages(prev =>
-                  prev.map(m => m.id === agentMsgId ? { ...m, content: m.content + chunk } : m)
-                )
-              }
-            } catch { /* ignore */ }
-          }
-        }
-        return
-      } catch {
-        setLoading(false)
-        setMessages(prev => [
-          ...prev,
-          { id: (Date.now() + 1).toString(), role: 'agent', content: 'OpenClaw is unreachable. Make sure the daemon is running (`openclaw onboard --install-daemon`).', ts: new Date() },
-        ])
-        return
-      }
-    }
-
-    // Mock replies for all other agents
-    await new Promise(r => setTimeout(r, 800 + Math.random() * 1200))
-    const reply = getMockReply(agentId)
-
+    const agentMsgId = (Date.now() + 1).toString()
+    setMessages(prev => [...prev, { id: agentMsgId, role: 'agent', content: '', ts: new Date() }])
     setLoading(false)
-    setMessages(prev => [
-      ...prev,
-      { id: (Date.now() + 1).toString(), role: 'agent', content: reply, ts: new Date() },
-    ])
+
+    try {
+      await streamAgentReply(agentId, agent.endpoint ?? '', text, chunk => {
+        setMessages(prev =>
+          prev.map(m => m.id === agentMsgId ? { ...m, content: m.content + chunk } : m)
+        )
+      })
+    } catch {
+      setMessages(prev =>
+        prev.map(m => m.id === agentMsgId
+          ? { ...m, content: `${agent.name} is unreachable. Check the daemon is running.` }
+          : m
+        )
+      )
+    }
   }
 
   const fmt = (d: Date) =>
@@ -188,6 +149,16 @@ export default function AgentChatPanel({ agentId }: { agentId: AgentId }) {
           <div className="font-semibold text-white text-sm">{agent.name}</div>
           <div className="text-[10px] text-slate-500">{agent.handle} · {agent.type}</div>
         </div>
+
+        {/* Live connectivity indicator */}
+        {online !== null && (
+          <div className="flex items-center gap-1 text-[10px]" title={online ? 'Daemon reachable' : 'Daemon offline'}>
+            {online
+              ? <Wifi className="w-3 h-3 text-emerald-400" />
+              : <WifiOff className="w-3 h-3 text-slate-600" />
+            }
+          </div>
+        )}
 
         {/* Status */}
         <div
@@ -227,9 +198,11 @@ export default function AgentChatPanel({ agentId }: { agentId: AgentId }) {
       <div className="flex items-center gap-4 px-4 py-2 border-b border-white/5 bg-white/2">
         <StatChip icon={<Cpu className="w-3 h-3" />} label="Tasks" value="7" accent={agent.accent} />
         <StatChip icon={<Zap className="w-3 h-3" />} label="Completed" value="43" accent={agent.accent} />
-        <div className="ml-auto text-[10px] text-slate-600 font-mono">
-          last active 2m ago
-        </div>
+        {agent.endpoint && (
+          <div className="ml-auto text-[10px] text-slate-600 font-mono truncate max-w-[140px]" title={agent.endpoint}>
+            {agent.endpoint}
+          </div>
+        )}
       </div>
 
       {/* Messages */}
@@ -269,7 +242,7 @@ export default function AgentChatPanel({ agentId }: { agentId: AgentId }) {
                         }
                   }
                 >
-                  {m.content}
+                  {m.content || <span className="opacity-30">…</span>}
                 </div>
                 <span className="text-[10px] text-slate-600 px-1 font-mono">{fmt(m.ts)}</span>
               </div>
