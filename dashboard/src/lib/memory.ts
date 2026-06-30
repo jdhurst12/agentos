@@ -2,6 +2,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs'
 import { join } from 'path'
 import { homedir } from 'os'
 import { randomUUID } from 'crypto'
+import { syncMemoryToObsidian, deleteMemoryFromObsidian } from './obsidian'
 
 export type MemoryType = 'fact' | 'conversation' | 'preference' | 'task' | 'note'
 
@@ -51,6 +52,7 @@ export function createMemory(data: Omit<MemoryEntry, 'id' | 'createdAt' | 'updat
     updatedAt: new Date().toISOString(),
   }
   save([...entries, entry])
+  syncMemoryToObsidian(entry, data.agentId)
   return entry
 }
 
@@ -60,14 +62,17 @@ export function updateMemory(id: string, data: Partial<Pick<MemoryEntry, 'conten
   if (idx === -1) return null
   entries[idx] = { ...entries[idx], ...data, updatedAt: new Date().toISOString() }
   save(entries)
+  syncMemoryToObsidian(entries[idx], entries[idx].agentId)
   return entries[idx]
 }
 
 export function deleteMemory(id: string): boolean {
   const entries = load()
+  const entry = entries.find(e => e.id === id)
   const filtered = entries.filter(e => e.id !== id)
   if (filtered.length === entries.length) return false
   save(filtered)
+  if (entry) deleteMemoryFromObsidian(id, entry.agentId)
   return true
 }
 

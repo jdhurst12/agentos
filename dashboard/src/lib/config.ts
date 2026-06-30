@@ -40,7 +40,7 @@ const DEFAULT_CONFIG: AgentOSConfig = {
     { id: 'nexus', name: 'Nexus', type: 'Orchestrator', status: 'STANDBY', color: 'amber', accent: '#f59e0b', avatar: '◈', endpoint: '', description: 'Multi-agent orchestration' },
     { id: 'phantom', name: 'Phantom', type: 'Stealth', status: 'OFFLINE', color: 'slate', accent: '#64748b', avatar: '◇', endpoint: '', description: 'Stealth operations' },
   ],
-  obsidian: { vaultDir: '~/Obsidian/Vaults/Agent Memory/Agent Memory', syncEnabled: true, autoSaveOnStop: true },
+  obsidian: { vaultDir: '/Users/jd/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian Vaults/2nd Brain | AI/Agent OS', syncEnabled: true, autoSaveOnStop: true },
   dashboard: { port: 3333, title: 'AgentOS Mission Control', ownerName: 'Agent' },
 }
 

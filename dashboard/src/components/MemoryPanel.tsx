@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Brain, Search, Plus, Trash2, Tag, X, ChevronDown } from 'lucide-react'
+import { Brain, Search, Plus, Trash2, Tag, X, BookOpen } from 'lucide-react'
 import { getAllAgents } from '@/lib/agents'
 import type { MemoryEntry, MemoryType } from '@/lib/memory'
 
@@ -220,6 +220,7 @@ export default function MemoryPanel() {
   const [filterType, setFilterType] = useState<MemoryType | 'all'>('all')
   const [showAdd, setShowAdd] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [obsidianSync, setObsidianSync] = useState<{ enabled: boolean; vaultDir: string } | null>(null)
 
   const agents = getAllAgents()
 
@@ -239,6 +240,13 @@ export default function MemoryPanel() {
     return () => clearTimeout(t)
   }, [load, search])
 
+  useEffect(() => {
+    fetch('/api/obsidian')
+      .then(r => r.json())
+      .then(d => setObsidianSync({ enabled: d.syncEnabled, vaultDir: d.vaultDir }))
+      .catch(() => {})
+  }, [])
+
   const handleDelete = async (id: string) => {
     await fetch(`/api/memory/${id}`, { method: 'DELETE' })
     setEntries(prev => prev.filter(e => e.id !== id))
@@ -257,13 +265,29 @@ export default function MemoryPanel() {
             {filtered.length} entries
           </span>
         </div>
-        <button
-          onClick={() => setShowAdd(true)}
-          className="flex items-center gap-2 px-3 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-sm font-semibold transition-colors"
-        >
-          <Plus className="w-3.5 h-3.5" />
-          Add Memory
-        </button>
+        <div className="flex items-center gap-2">
+          {obsidianSync && (
+            <div
+              title={`Obsidian sync ${obsidianSync.enabled ? 'active' : 'disabled'}\n${obsidianSync.vaultDir}`}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-[10px] font-medium"
+              style={{
+                background: obsidianSync.enabled ? 'rgba(124,58,237,0.12)' : 'rgba(255,255,255,0.04)',
+                borderColor: obsidianSync.enabled ? 'rgba(124,58,237,0.3)' : 'rgba(255,255,255,0.08)',
+                color: obsidianSync.enabled ? '#a78bfa' : '#475569',
+              }}
+            >
+              <BookOpen className="w-3 h-3" />
+              Obsidian {obsidianSync.enabled ? 'sync on' : 'sync off'}
+            </div>
+          )}
+          <button
+            onClick={() => setShowAdd(true)}
+            className="flex items-center gap-2 px-3 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-sm font-semibold transition-colors"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            Add Memory
+          </button>
+        </div>
       </div>
 
       {/* Filters */}
