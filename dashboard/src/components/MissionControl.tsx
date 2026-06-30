@@ -6,6 +6,7 @@ import {
   Send, Radio, Zap, Clock, Maximize2, X, Terminal, Plus, Search,
   Activity, Command, CheckCircle2, AlertCircle, ChevronRight,
   Brain, Network, GitBranch, Target, BookOpen, Layers, Wifi, WifiOff,
+  Cpu, Box, Sparkles,
 } from 'lucide-react'
 import { getAllAgents, getCustomAgents, type AgentConfig } from '@/lib/agents'
 import clsx from 'clsx'
@@ -937,6 +938,14 @@ export default function MissionControl({
   const [showPalette, setShowPalette] = useState(false)
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [activityEvents, setActivityEvents] = useState<ActivityEvent[]>([])
+  const [vitals, setVitals] = useState<{ claude: { ok: boolean; version: string }; openclaw: { ok: boolean; agents: string[]; sessions: number }; hermes: { ok: boolean; model: string } } | null>(null)
+
+  useEffect(() => {
+    const fetchVitals = () => fetch('/api/vitals', { cache: 'no-store' }).then(r => r.json()).then(setVitals).catch(() => {})
+    fetchVitals()
+    const t = setInterval(fetchVitals, 10000)
+    return () => clearInterval(t)
+  }, [])
 
   // Load agents (builtin + custom) on client
   useEffect(() => {
@@ -1094,6 +1103,31 @@ export default function MissionControl({
       <div className="flex flex-1 gap-3 p-4 min-h-0 overflow-hidden">
         {/* Left: agent grid + broadcast */}
         <div className="flex-1 flex flex-col gap-3 min-h-0 min-w-0">
+
+          {/* Vitals strip */}
+          {vitals && (
+            <div className="flex gap-2 flex-shrink-0 flex-wrap">
+              {[
+                { label: 'Claude', icon: <Sparkles className="w-3 h-3" />, ok: vitals.claude.ok, sub: vitals.claude.version?.split(' ')[0] ?? '—', accent: '#d97757' },
+                { label: 'OpenClaw', icon: <Box className="w-3 h-3" />, ok: vitals.openclaw.ok, sub: `${vitals.openclaw.agents.length} agents · ${vitals.openclaw.sessions} sessions`, accent: '#f472b6' },
+                { label: 'Hermes', icon: <Cpu className="w-3 h-3" />, ok: vitals.hermes.ok, sub: vitals.hermes.model?.split('/').pop() ?? '—', accent: '#60a5fa' },
+              ].map(v => (
+                <div
+                  key={v.label}
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl border flex-1 min-w-[130px]"
+                  style={{ background: `${v.accent}08`, borderColor: `${v.accent}20` }}
+                >
+                  <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: v.ok ? '#10b981' : '#ef4444', boxShadow: `0 0 6px ${v.ok ? '#10b981' : '#ef4444'}` }} />
+                  <span style={{ color: v.accent }} className="flex-shrink-0">{v.icon}</span>
+                  <div className="min-w-0">
+                    <div className="text-[11px] font-semibold text-white truncate">{v.label}</div>
+                    <div className="text-[10px] text-slate-600 truncate">{v.sub}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
           {/* Agent grid — scrollable */}
           <div className="flex-1 overflow-y-auto min-h-0">
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 auto-rows-[minmax(220px,280px)]">
