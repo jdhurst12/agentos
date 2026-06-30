@@ -131,14 +131,14 @@ function TopBar({
     <div
       className="flex items-center gap-4 px-5 py-3 border-b flex-shrink-0 relative overflow-hidden"
       style={{
-        background: 'linear-gradient(90deg, rgba(124,58,237,0.14) 0%, rgba(8,8,20,0.96) 40%, rgba(8,8,20,0.96) 70%, rgba(6,182,212,0.09) 100%)',
-        borderColor: 'rgba(99,102,241,0.18)',
+        background: 'linear-gradient(90deg, rgba(59,130,246,0.14) 0%, rgba(8,8,20,0.96) 40%, rgba(8,8,20,0.96) 70%, rgba(6,182,212,0.09) 100%)',
+        borderColor: 'rgba(59,130,246,0.18)',
       }}
     >
       {/* Top shimmer line */}
       <div
         className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(124,58,237,0.7) 35%, rgba(6,182,212,0.5) 65%, transparent 100%)' }}
+        style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(59,130,246,0.7) 35%, rgba(6,182,212,0.5) 65%, transparent 100%)' }}
       />
 
       {/* Brand */}
@@ -150,10 +150,10 @@ function TopBar({
             className="absolute inset-0 border border-violet-500/50 rounded-lg"
             style={{ borderRadius: 6 }}
           />
-          <Terminal className="w-3 h-3 text-violet-400 relative z-10" />
+          <Terminal className="w-3 h-3 text-blue-400 relative z-10" />
         </div>
         <div>
-          <div className="text-[11px] font-black tracking-[0.3em] text-white glow-violet">AGENTOS</div>
+          <div className="text-[11px] font-black tracking-[0.3em] text-white glow-blue">AGENTOS</div>
           <div className="text-[8px] tracking-[0.35em] text-slate-600 uppercase">Mission Control</div>
         </div>
       </div>
@@ -220,7 +220,7 @@ const QUICK_ACTIONS = [
   { id: 'memory',   label: 'Memory',             icon: Brain,       color: '#8b5cf6' },
   { id: 'orgchart', label: 'Org Chart',           icon: Network,     color: '#06b6d4' },
   { id: 'crew',     label: 'Crew Builder',        icon: GitBranch,   color: '#f59e0b' },
-  { id: 'goals',    label: 'Goals',               icon: Target,      color: '#a855f7' },
+  { id: 'goals',    label: 'Goals',               icon: Target,      color: '#3b82f6' },
   { id: 'journal',  label: 'Journal',             icon: BookOpen,    color: '#10b981' },
   { id: 'new-agent',label: 'Create New Agent',    icon: Plus,        color: '#10b981' },
 ]
@@ -297,8 +297,8 @@ function CommandPalette({
         className="w-full max-w-lg rounded-2xl border overflow-hidden"
         style={{
           background: 'rgba(7,7,22,0.98)',
-          borderColor: 'rgba(124,58,237,0.45)',
-          boxShadow: '0 0 0 1px rgba(124,58,237,0.15), 0 0 80px rgba(124,58,237,0.18), 0 32px 64px rgba(0,0,0,0.7)',
+          borderColor: 'rgba(59,130,246,0.45)',
+          boxShadow: '0 0 0 1px rgba(59,130,246,0.15), 0 0 80px rgba(59,130,246,0.18), 0 32px 64px rgba(0,0,0,0.7)',
         }}
       >
         {/* Search input */}
@@ -417,7 +417,7 @@ const EVENT_COLORS: Record<ActivityEvent['type'], string> = {
   received: '',  // uses agent accent
   online: '#10b981',
   offline: '#64748b',
-  broadcast: '#a855f7',
+  broadcast: '#3b82f6',
 }
 
 function ActivityFeed({ events }: { events: ActivityEvent[] }) {
@@ -434,12 +434,12 @@ function ActivityFeed({ events }: { events: ActivityEvent[] }) {
       className="w-[220px] flex-shrink-0 flex flex-col rounded-2xl border overflow-hidden"
       style={{
         background: 'rgba(7,7,20,0.88)',
-        borderColor: 'rgba(99,102,241,0.14)',
+        borderColor: 'rgba(59,130,246,0.14)',
         boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)',
       }}
     >
-      <div className="flex items-center gap-2 px-3 py-2.5 border-b flex-shrink-0" style={{ borderColor: 'rgba(99,102,241,0.12)' }}>
-        <Activity className="w-3.5 h-3.5 text-violet-400" />
+      <div className="flex items-center gap-2 px-3 py-2.5 border-b flex-shrink-0" style={{ borderColor: 'rgba(59,130,246,0.12)' }}>
+        <Activity className="w-3.5 h-3.5 text-blue-400" />
         <span className="text-[10px] font-bold text-white tracking-[0.2em] uppercase">Activity</span>
         <div className="ml-auto flex items-center gap-1.5">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 status-dot-online" />
@@ -510,22 +510,22 @@ function AgentAddCard({ onAdd }: { onAdd?: () => void }) {
       onClick={onAdd}
       className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed gap-3 group transition-all"
       style={{
-        borderColor: 'rgba(99,102,241,0.22)',
-        background: 'rgba(99,102,241,0.03)',
+        borderColor: 'rgba(59,130,246,0.22)',
+        background: 'rgba(59,130,246,0.03)',
         minHeight: 180,
       }}
       whileHover={{
-        borderColor: 'rgba(139,92,246,0.55)',
-        backgroundColor: 'rgba(139,92,246,0.07)',
+        borderColor: 'rgba(59,130,246,0.55)',
+        backgroundColor: 'rgba(59,130,246,0.07)',
       }}
       whileTap={{ scale: 0.98 }}
     >
       <motion.div
         className="w-12 h-12 rounded-xl flex items-center justify-center border transition-all"
-        style={{ background: 'rgba(139,92,246,0.1)', borderColor: 'rgba(139,92,246,0.25)' }}
-        whileHover={{ background: 'rgba(139,92,246,0.2)', borderColor: 'rgba(139,92,246,0.5)' }}
+        style={{ background: 'rgba(59,130,246,0.1)', borderColor: 'rgba(59,130,246,0.25)' }}
+        whileHover={{ background: 'rgba(59,130,246,0.2)', borderColor: 'rgba(59,130,246,0.5)' }}
       >
-        <Plus className="w-6 h-6 text-violet-400 group-hover:text-violet-300 transition-colors" />
+        <Plus className="w-6 h-6 text-blue-400 group-hover:text-violet-300 transition-colors" />
       </motion.div>
       <div className="text-center space-y-0.5">
         <div className="text-xs font-bold text-slate-500 group-hover:text-violet-300 transition-colors tracking-wide">
@@ -866,13 +866,13 @@ function BroadcastBar({
       className="flex items-center gap-3 px-4 py-3 rounded-2xl border flex-shrink-0"
       style={{
         background: 'rgba(7,7,20,0.88)',
-        borderColor: 'rgba(139,92,246,0.2)',
-        boxShadow: '0 0 0 1px rgba(139,92,246,0.06)',
+        borderColor: 'rgba(59,130,246,0.2)',
+        boxShadow: '0 0 0 1px rgba(59,130,246,0.06)',
       }}
     >
       <div className="flex items-center gap-2 flex-shrink-0">
-        <Radio className="w-3.5 h-3.5 text-violet-400" />
-        <span className="text-[10px] font-bold text-violet-400 tracking-[0.2em] uppercase">Broadcast</span>
+        <Radio className="w-3.5 h-3.5 text-blue-400" />
+        <span className="text-[10px] font-bold text-blue-400 tracking-[0.2em] uppercase">Broadcast</span>
       </div>
 
       {/* Target toggles */}
@@ -913,8 +913,8 @@ function BroadcastBar({
           disabled={!msg.trim() || targets.size === 0}
           className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-semibold transition-all disabled:opacity-30"
           style={{
-            background: sent ? 'rgba(16,185,129,0.2)' : 'rgba(139,92,246,0.22)',
-            color: sent ? '#10b981' : '#a855f7',
+            background: sent ? 'rgba(16,185,129,0.2)' : 'rgba(59,130,246,0.22)',
+            color: sent ? '#10b981' : '#3b82f6',
           }}
         >
           {sent ? <CheckCircle2 className="w-3 h-3" /> : <Zap className="w-3 h-3" />}
@@ -1065,7 +1065,7 @@ export default function MissionControl({
   }, [agents, pushEvent])
 
   const broadcast = useCallback((message: string, targetIds: string[]) => {
-    pushEvent({ agentId: 'system', agentName: 'Broadcast', accent: '#a855f7', avatar: '⚡', type: 'broadcast', content: message })
+    pushEvent({ agentId: 'system', agentName: 'Broadcast', accent: '#3b82f6', avatar: '⚡', type: 'broadcast', content: message })
     targetIds.forEach(id => {
       const agent = agents.find(a => a.id === id)
       if (!agent) return
@@ -1130,7 +1130,7 @@ export default function MissionControl({
 
           {/* Agent grid — scrollable */}
           <div className="flex-1 overflow-y-auto min-h-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 auto-rows-[minmax(220px,280px)]">
+            <div className="grid grid-cols-2 xl:grid-cols-3 gap-3 auto-rows-[minmax(220px,280px)]">
               {agents.map((agent, idx) => (
                 <motion.div
                   key={agent.id}

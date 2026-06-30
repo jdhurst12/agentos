@@ -148,6 +148,7 @@ main, header, aside, nav, .surface { position: relative; z-index: 2; }
 
 /* ── Glow utilities ── */
 .glow-violet { color: var(--gold);    text-shadow: 0 0 10px rgba(212,165,116,0.7); }
+.glow-blue   { color: #93c5fd;        text-shadow: 0 0 10px rgba(59,130,246,0.6); }
 .glow-cyan   { color: var(--emerald); text-shadow: 0 0 10px rgba(90,184,150,0.7); }
 .glow-emerald{ color: var(--emerald); text-shadow: 0 0 10px rgba(90,184,150,0.7); }
 .glow-c { color: var(--rust);      text-shadow: 0 0 18px rgba(201,124, 94,0.5); }

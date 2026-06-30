@@ -61,20 +61,20 @@ export default function Sidebar({ activeAgent, onSelect, onCreateAgent }: Sideba
       initial={{ x: -80, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
-      className="flex flex-col w-64 min-h-screen border-r border-indigo-500/10"
+      className="flex flex-col w-64 min-h-screen border-r border-blue-500/10"
       style={{ background: 'rgba(5,5,18,0.97)', borderRadius: 0 }}
     >
       {/* Logo */}
-      <div className="flex items-center gap-3 px-5 py-5 border-b border-indigo-500/10">
+      <div className="flex items-center gap-3 px-5 py-5 border-b border-blue-500/10">
         <div className="relative w-9 h-9 flex items-center justify-center">
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 14, repeat: Infinity, ease: 'linear' }}
             className="absolute inset-0"
           >
-            <Hexagon className="w-9 h-9 text-violet-500/70" strokeWidth={1} />
+            <Hexagon className="w-9 h-9 text-blue-500/70" strokeWidth={1} />
           </motion.div>
-          <Zap className="w-3.5 h-3.5 text-violet-300 relative z-10" />
+          <Zap className="w-3.5 h-3.5 text-blue-300 relative z-10" />
         </div>
         <div>
           <div className="text-[11px] font-bold tracking-[0.35em] text-white glow-violet">AGENTOS</div>
@@ -123,7 +123,7 @@ export default function Sidebar({ activeAgent, onSelect, onCreateAgent }: Sideba
           <span className="text-[10px] uppercase tracking-[0.3em] text-slate-600 font-semibold">Agents</span>
           <button
             onClick={onCreateAgent}
-            className="p-1 rounded-md text-slate-600 hover:text-violet-400 hover:bg-violet-500/10 transition-colors"
+            className="p-1 rounded-md text-slate-600 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"
             title="Add new agent"
           >
             <Plus className="w-3.5 h-3.5" />
@@ -168,7 +168,7 @@ export default function Sidebar({ activeAgent, onSelect, onCreateAgent }: Sideba
       </nav>
 
       {/* Footer */}
-      <div className="px-3 py-4 border-t border-indigo-500/10 space-y-0.5">
+      <div className="px-3 py-4 border-t border-blue-500/10 space-y-0.5">
         <button
           onClick={() => onSelect('fleet')}
           className={clsx(
