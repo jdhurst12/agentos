@@ -169,6 +169,7 @@ const CATALOG = {
         { name: "n8n", url: "https://n8n.io/", desc: "Fair-code workflow automation with first-class AI/agent nodes. Self-hostable and visual. Bridges classic automation and LLM agents.", also: ["Self-Hosted Apps (Docker)"] },
         { name: "AutoGPT", url: "https://github.com/Significant-Gravitas/AutoGPT", desc: "The repo that popularized autonomous goal-driven agents. Spawns and chains its own subtasks. Historically important and still widely referenced.", also: ["GitHub — Notable Repos"] },
         { name: "Goose (Block)", url: "https://block.github.io/goose/", desc: "Open-source, on-machine AI agent that uses MCP to run real developer tasks end to end. Extensible and local-first. A rising agentic dev tool." },
+        { name: "Polsia", url: "https://polsia.com/", desc: "Autonomous AI platform that runs a company end-to-end — nine specialized agents handle planning, coding, marketing, sales, and customer support 24/7. Positioned as an AI co-founder or CEO agent. Raised $30M at a $250M valuation in May 2026 after growing from $100K to $10M ARR in roughly three months." },
       ],
     },
 
