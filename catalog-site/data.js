@@ -171,6 +171,18 @@ const CATALOG = {
         { name: "AutoGPT", url: "https://github.com/Significant-Gravitas/AutoGPT", desc: "The repo that popularized autonomous goal-driven agents. Spawns and chains its own subtasks. Historically important and still widely referenced.", also: ["GitHub — Notable Repos"] },
         { name: "Goose (Block)", url: "https://block.github.io/goose/", desc: "Open-source, on-machine AI agent that uses MCP to run real developer tasks end to end. Extensible and local-first. A rising agentic dev tool." },
         { name: "Polsia", url: "https://polsia.com/", desc: "Autonomous AI platform that runs a company end-to-end — nine specialized agents handle planning, coding, marketing, sales, and customer support 24/7. Positioned as an AI co-founder or CEO agent. Raised $30M at a $250M valuation in May 2026 after growing from $100K to $10M ARR in roughly three months." },
+        { name: "Composio", url: "https://composio.dev/", desc: "Integration platform that gives AI agents turnkey access to 100+ real-world apps — Gmail, GitHub, Slack, Notion, Linear, and more — via a unified SDK. Handles OAuth, auth complexity, and API versioning so agent builders don't have to. Works with LangChain, CrewAI, OpenAI Agents SDK, and Claude." },
+        { name: "Wunderland", url: "#", desc: "[AgentOS] Deploys autonomous AI agents with persistent personality, long-term memory, and real executable skills. Agents carry identity and context across sessions rather than resetting each turn. Part of the Agent Ops ecosystem — positioning: autonomous-agent-as-colleague.", tags: ["agentos"] },
+        { name: "Hexaco Personality & Cognitive Memory", url: "#", desc: "[AgentOS] Personality and memory architecture for AI agents based on the HEXACO six-factor model (Honesty-Humility, Emotionality, eXtraversion, Agreeableness, Conscientiousness, Openness). Gives agents stable behavioral traits and a structured long-term memory graph.", tags: ["agentos"] },
+        { name: "Fusion", url: "#", desc: "[AgentOS] Multi-model fusion panel in Agent Ops that routes queries to multiple AI endpoints simultaneously — Claude, GPT, Gemini, and local models — and surfaces side-by-side results. Core AgentOS intelligence hub for comparing and combining model outputs.", tags: ["agentos", "internal"] },
+        { name: "Radar", url: "#", desc: "[AgentOS] Situational-awareness panel for monitoring active agent states, fleet health, and emergent patterns across the Agent Ops system in real time.", tags: ["agentos", "internal"] },
+        { name: "Multi-Agent Collectives", url: "#", desc: "Architecture pattern where groups of AI agents self-organize around shared objectives, pool capabilities, and negotiate task assignments dynamically. Related to swarm intelligence and decentralized agent design. An emerging production pattern in enterprise AI.", tags: ["concept", "pattern"] },
+        { name: "Tool Registry", url: "#", desc: "Central directory where AI agents can discover, register, and invoke available tools and capabilities at runtime. Enables extensible, dynamically composable agent tooling without hardcoded integrations — a key primitive for scalable multi-agent systems.", tags: ["concept", "pattern"] },
+        { name: "Agent Job Marketplace", url: "#", desc: "Emerging platform pattern where AI agents post, discover, bid on, and execute tasks — including sub-tasks delegated from other agents or humans. Enables dynamic multi-agent economies with specialization and load balancing.", tags: ["concept"] },
+        { name: "Compatibility Discovering", url: "#", desc: "Automated process by which agents or orchestrators probe and verify interface compatibility between tools, APIs, and other agents before composition. Reduces integration failures in dynamic multi-agent pipelines and enables self-assembling workflows.", tags: ["concept", "pattern"] },
+        { name: "RAG Memory Tools", url: "#", desc: "Category of tooling for implementing retrieval-augmented generation — giving models searchable long-term memory via vector databases, embedding pipelines, and retrieval strategies. The core pattern in production AI assistants and agents. See Vector DBs & RAG for specific implementations.", tags: ["concept", "pattern"] },
+        { name: "Emergent Capabilities", url: "#", desc: "Abilities that appear in large language models at scale without explicit training for those specific behaviors — surprising developers and researchers alike. A central topic in AI safety, capability evaluation, and interpretability. Key context for why frontier models outperform predictions.", tags: ["concept"] },
+        { name: "Paracosm", url: "#", desc: "Counter-factual world simulator for exploring alternative narratives, stress-testing plans, and modeling synthetic information dynamics. Useful for understanding how misinformation ('fake news') propagates through alternative-history frameworks and for scenario planning.", tags: ["concept"] },
       ],
     },
 
@@ -221,6 +233,8 @@ const CATALOG = {
         { name: "whisper.cpp", url: "https://github.com/ggml-org/whisper.cpp", desc: "Efficient C/C++ port of Whisper that runs transcription fully locally, even on modest hardware. From the llama.cpp author. Great for offline, private STT.", also: ["Locally-Run LLMs & Runtimes"] },
         { name: "Coqui / XTTS", url: "https://github.com/coqui-ai/TTS", desc: "Open-source TTS toolkit with multilingual voice cloning (XTTS). Self-hostable and free. A leading open alternative to ElevenLabs." },
         { name: "Kokoro TTS", url: "https://huggingface.co/hexgrad/Kokoro-82M", desc: "Tiny, high-quality open TTS model that runs locally and fast. Punches above its size. Popular for lightweight local voice." },
+        { name: "BlueVoice", url: "https://bluevoice.ai/", desc: "Real-time AI voice enhancement platform that removes background noise, improves audio clarity, and post-processes recordings for calls, streaming, and podcasting. Designed for professional-quality voice output without studio hardware." },
+        { name: "FluidVoice", url: "#", desc: "AI-powered voice synthesis and audio processing tool for dynamic, natural-sounding speech generation and real-time voice modulation." },
       ],
     },
 
@@ -301,6 +315,59 @@ const CATALOG = {
         { name: "build-your-own-x", url: "https://github.com/codecrafters-io/build-your-own-x", desc: "Tutorials for rebuilding well-known tech (databases, git, OSes) from scratch. Beloved for deep learning. Consistently top-starred." },
         { name: "system-design-primer", url: "https://github.com/donnemartin/system-design-primer", desc: "The go-to open resource for learning system design and prepping for interviews. Clear and comprehensive. A top-starred study repo." },
         { name: "oh-my-zsh", url: "https://github.com/ohmyzsh/ohmyzsh", desc: "The community framework that made a powerful, pretty zsh shell the norm. Huge plugin and theme ecosystem. On countless developer machines." },
+      ],
+    },
+
+    /* ====================================================================== */
+    {
+      title: "Developer Tools & Productivity",
+      blurb: "Terminals, launchers, languages, and package managers that define the modern dev workflow.",
+      items: [
+        { name: "Warp", url: "https://www.warp.dev/", desc: "AI-native terminal rebuilt for developer speed — block-based output, AI command suggestions, shared runbooks, and team collaboration. Available on macOS and Linux. One of the fastest-growing developer tools of the 2020s." },
+        { name: "Raycast", url: "https://www.raycast.com/", desc: "macOS productivity launcher with deep AI integration — search files, run scripts, control apps, and chat with LLMs from a single keystroke. Thousands of community extensions. A power-user daily driver that effectively replaces Spotlight." },
+        { name: "Ghostty", url: "https://ghostty.org/", desc: "Fast, feature-rich terminal emulator written in Zig with native GPU rendering. Prioritizes correctness, performance, and platform-native integration. Gaining rapid adoption as a modern iTerm2 / Alacritty alternative." },
+        { name: "1Password", url: "https://1password.com/", desc: "Leading password and secrets manager for individuals and teams. Covers passwords, passkeys, MFA, SSH keys, and developer secrets via CLI and browser extensions. The standard for secure credential management in both personal and enterprise settings." },
+        { name: "NPM", url: "https://www.npmjs.com/", desc: "The package manager for Node.js and the world's largest software registry. Billions of downloads per week across millions of packages. The backbone of JavaScript and TypeScript project dependency management.", also: ["GitHub — Notable Repos"] },
+        { name: "TypeScript", url: "https://www.typescriptlang.org/", desc: "Microsoft's typed superset of JavaScript that compiles to plain JS. Catches errors at build time, powers IDE tooling, and has become the de facto standard for large-scale web and Node projects. Near-universal in the modern JS ecosystem.", also: ["GitHub — Notable Repos"] },
+        { name: "VS Code", url: "https://code.visualstudio.com/", desc: "Microsoft's open-source editor and the industry-default IDE with an enormous extension ecosystem. The base layer for Cursor, Windsurf, and most AI-enhanced editors. Cross-listed from GitHub Notable Repos.", also: ["GitHub — Notable Repos", "AI Coding Tools"] },
+        { name: "Framer", url: "https://www.framer.com/", desc: "AI-powered design-to-code web builder for creating responsive, interactive sites and component libraries from prompts or Figma designs. Popular among product designers and startups for shipping polished web experiences without writing much code.", also: ["AI Coding Tools"] },
+      ],
+    },
+
+    /* ====================================================================== */
+    {
+      title: "Observability, Monitoring & Security",
+      blurb: "Platforms and frameworks for understanding, tracing, and securing systems and AI.",
+      items: [
+        { name: "Datadog", url: "https://www.datadoghq.com/", desc: "Cloud-scale monitoring platform for metrics, traces, logs, and security across the full stack. The production standard for DevOps and SRE observability. Rich integrations, ML-powered alerting, and AI observability tooling." },
+        { name: "OpenTelemetry", url: "https://opentelemetry.io/", desc: "Open, vendor-neutral standard and SDK for generating, collecting, and exporting observability data — traces, metrics, and logs. CNCF-backed and rapidly becoming the default instrumentation layer replacing proprietary agents.", tags: ["open-source", "standard"] },
+        { name: "Provenance and Audit Trails", url: "#", desc: "Practices and tooling for recording the origin, transformation history, and chain of custody of data, model outputs, and AI decisions. Essential for compliance, debugging, and establishing trust in AI systems. Increasingly mandated in regulated industries.", tags: ["concept", "pattern"] },
+        { name: "Five-Tier Prompt Injection Defense", url: "#", desc: "Layered security framework for protecting AI systems against prompt injection — attacks where malicious inputs attempt to override model instructions. Tiers typically cover: input validation, context isolation, privilege separation, output filtering, and runtime monitoring.", tags: ["concept", "security"] },
+      ],
+    },
+
+    /* ====================================================================== */
+    {
+      title: "Data Architecture & Schema",
+      blurb: "Schema standards, data modeling patterns, and tools for structured and semi-structured data.",
+      items: [
+        { name: "Schema.org", url: "https://schema.org/", desc: "Collaborative, community-driven vocabulary for structured data on the web. Used with JSON-LD, Microdata, and RDFa to annotate content for search engines, AI agents, and data pipelines. The backbone of semantic SEO and machine-readable web content.", tags: ["open-source", "standard"] },
+        { name: "Data-Pilot", url: "#", desc: "Intelligent data navigation and analysis tool for exploring, querying, and understanding datasets. Designed to accelerate data investigation for both human analysts and AI-assisted workflows." },
+        { name: "Schema on Need", url: "#", desc: "Architectural pattern where data schema is generated or applied only when and as needed — at query time, per consumer, or on demand — rather than enforced upfront at ingestion. Enables flexible, exploratory access to raw or heterogeneous datasets.", tags: ["concept", "pattern"] },
+        { name: "Schema On Read", url: "#", desc: "Data architecture pattern where raw data is stored without a fixed structure and schema is applied when the data is read by a consumer. Core to modern data lake architectures and contrasted with traditional 'schema on write' warehouses.", tags: ["concept", "pattern"] },
+        { name: "Schema On Demand", url: "#", desc: "Variant of flexible schema architectures where data structure is dynamically inferred or specified based on each consumer's requirements at access time. Supports heterogeneous consumers with different views of the same underlying dataset.", tags: ["concept", "pattern"] },
+      ],
+    },
+
+    /* ====================================================================== */
+    {
+      title: "Enterprise & Business Software",
+      blurb: "ERP, IT management, and enterprise AI platforms for organizational operations.",
+      items: [
+        { name: "AbacusAI", url: "https://abacus.ai/", desc: "Enterprise AI platform for building and deploying ML models, AI agents, and real-time data pipelines without deep ML expertise. Offers pre-built AI solutions for forecasting, personalization, and customer support at scale. Used by data teams at large organizations." },
+        { name: "Odoo", url: "https://www.odoo.com/", desc: "Open-source, modular ERP and business application suite covering manufacturing, CRM, inventory, accounting, HR, project management, and more. Self-hostable and cost-effective — a leading alternative to SAP/Oracle for SMBs and mid-market companies.", tags: ["open-source"] },
+        { name: "Progress Software", url: "https://www.progress.com/", desc: "Enterprise software company behind OpenEdge application development, Telerik UI components, and Chef infrastructure automation. Provides platforms for building business applications, developer UX tooling, and managing IT infrastructure at scale." },
+        { name: "ManageEngine", url: "https://www.manageengine.com/", desc: "Comprehensive IT management suite from Zoho covering helpdesk (ServiceDesk Plus), network monitoring, Active Directory management, and security operations. Publishes practical e-books including 'Virtual Server Management Practices' and 'Agentic AI: Moving ITOps from Alerts to Action.'", tags: ["enterprise"] },
       ],
     },
 

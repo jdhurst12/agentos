@@ -1,0 +1,38 @@
+Name	Category	URL / Notes
+Warp	Developer Tools & Productivity	warp.dev — AI-native terminal
+Raycast	Developer Tools & Productivity	raycast.com — macOS AI launcher
+BlueVoice	Voice — TTS & Speech-to-Text	bluevoice.ai — real-time voice AI
+FluidVoice	Voice — TTS & Speech-to-Text	TBD — AI voice processing
+Open WebUI	Locally-Run LLMs & Runtimes	openwebui.com — already in catalog
+AbacusAI	Enterprise & Business Software	abacus.ai — enterprise AI platform
+LM Studio	Locally-Run LLMs & Runtimes	lmstudio.ai — already in catalog
+VS Code	Developer Tools & Productivity	code.visualstudio.com — already in GitHub Notable Repos
+1Password	Developer Tools & Productivity	1password.com — password / secrets manager
+Ghostty	Developer Tools & Productivity	ghostty.org — fast terminal emulator
+Wunderland	AI Agents & Agent Frameworks	AgentOS internal — autonomous agents w/ personality + memory
+Hexaco Personality & Cognitive Memory	AI Agents & Agent Frameworks	AgentOS internal — HEXACO-based agent personality layer
+Agent Job Marketplace	AI Agents & Agent Frameworks	Concept — marketplace for agent-to-agent task delegation
+Compatibility Discovering	AI Agents & Agent Frameworks	Concept — automated agent interface compatibility probing
+RAG Memory Tools	AI Agents & Agent Frameworks	Pattern — retrieval-augmented long-term memory tooling
+OpenTelemetry	Observability, Monitoring & Security	opentelemetry.io — vendor-neutral observability standard
+Provenance and Audit Trails	Observability, Monitoring & Security	Concept — chain-of-custody for AI data and decisions
+Multi-Agent Collectives	AI Agents & Agent Frameworks	Pattern — self-organizing agent swarms
+Tool Registry	AI Agents & Agent Frameworks	Pattern — runtime agent tool discovery
+Framers	Developer Tools & Productivity	framer.com — AI-powered design-to-code web builder
+Emergent Capabilities	AI Agents & Agent Frameworks	Concept — abilities appearing at scale without explicit training
+Progress Software	Enterprise & Business Software	progress.com — OpenEdge, Telerik, Chef
+Odoo Manufacturing Software	Enterprise & Business Software	odoo.com — open-source ERP suite
+Schema.org	Data Architecture & Schema	schema.org — structured data vocabulary standard
+Data-Pilot	Data Architecture & Schema	TBD — intelligent data navigation and analysis
+Schema on Need	Data Architecture & Schema	Pattern — schema generated per-consumer at query time
+Schema On Read	Data Architecture & Schema	Pattern — schema applied at read time (data lake pattern)
+Schema On Demand	Data Architecture & Schema	Pattern — dynamic schema inferred per access request
+Datadog	Observability, Monitoring & Security	datadoghq.com — cloud-scale monitoring platform
+Radar	AI Agents & Agent Frameworks	AgentOS internal — fleet situational-awareness panel
+Fusion	AI Agents & Agent Frameworks	AgentOS internal — multi-model fusion panel
+Composio	AI Agents & Agent Frameworks	composio.dev — 100+ app integrations for AI agents
+ManageEngine	Enterprise & Business Software	manageengine.com — IT mgmt suite + e-books incl. Agentic AI ITOps
+Paracosm	AI Agents & Agent Frameworks	Concept — counter-factual world / synthetic narrative simulator
+NPM	Developer Tools & Productivity	npmjs.com — Node.js package manager and registry
+TypeScript	Developer Tools & Productivity	typescriptlang.org — typed JavaScript superset
+Five-Tier Prompt Injection Defense	Observability, Monitoring & Security	Framework — layered AI prompt injection security
