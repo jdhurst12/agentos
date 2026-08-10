@@ -1,0 +1,68 @@
+{
+  "_comment": "Copy this to agentos.config.json and fill in your values. Never commit agentos.config.json.",
+
+  "claude": {
+    "model": "claude-sonnet-4-6",
+    "cliPath": "claude",
+    "apiKey": ""
+  },
+
+  "agents": [
+    {
+      "id": "openclaw",
+      "name": "OpenClaw",
+      "type": "Research",
+      "status": "ACTIVE",
+      "color": "cyan",
+      "accent": "#06b6d4",
+      "avatar": "⌖",
+      "endpoint": "",
+      "description": "Web research and document analysis agent"
+    },
+    {
+      "id": "hermes",
+      "name": "Hermes",
+      "type": "Messaging",
+      "status": "ACTIVE",
+      "color": "pink",
+      "accent": "#ec4899",
+      "avatar": "⚡",
+      "endpoint": "",
+      "description": "Multi-channel messaging and delivery agent"
+    },
+    {
+      "id": "nexus",
+      "name": "Nexus",
+      "type": "Orchestrator",
+      "status": "STANDBY",
+      "color": "amber",
+      "accent": "#f59e0b",
+      "avatar": "◈",
+      "endpoint": "",
+      "description": "Multi-agent orchestration and task routing"
+    },
+    {
+      "id": "phantom",
+      "name": "Phantom",
+      "type": "Stealth",
+      "status": "OFFLINE",
+      "color": "slate",
+      "accent": "#64748b",
+      "avatar": "◇",
+      "endpoint": "",
+      "description": "Stealth operations agent"
+    }
+  ],
+
+  "obsidian": {
+    "vaultDir": "~/Obsidian/Vaults/Agent Memory/Agent Memory",
+    "syncEnabled": true,
+    "autoSaveOnStop": true
+  },
+
+  "dashboard": {
+    "port": 3333,
+    "title": "Agent Ops",
+    "ownerName": "Agent"
+  }
+}

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Stacked Up</title>
+<style>
+  :root {
+    --bg: #15101a;
+    --bg-soft: #1d1726;
+    --card: #221b2d;
+    --card-hover: #2a2236;
+    --border: rgba(255,255,255,0.08);
+    --cream: #f3ebda;
+    --muted: #9a8fa6;
+    --gold: #d4a574;
+    --plum: #c4607e;
+    --rust: #c97c5e;
+    --green: #5ab896;
+    --blue: #6aa6e8;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--cream);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+  }
+  a { color: var(--gold); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  header {
+    position: sticky; top: 0; z-index: 20;
+    background: rgba(21,16,26,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 24px 16px;
+  }
+  .title-row { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  h1 { font-size: 22px; margin: 0; letter-spacing: 0.5px; }
+  h1 .accent { color: var(--gold); }
+  .updated { font-size: 12px; color: var(--muted); }
+  .sub { font-size: 13px; color: var(--muted); margin: 4px 0 14px; }
+
+  .controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  #search {
+    flex: 1; min-width: 220px;
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    color: var(--cream);
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 14px;
+    outline: none;
+  }
+  #search:focus { border-color: var(--gold); }
+  #count { font-size: 12px; color: var(--muted); white-space: nowrap; }
+
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .chip {
+    font-size: 12px;
+    padding: 5px 11px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--bg-soft);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .chip:hover { color: var(--cream); border-color: var(--gold); }
+
+  main { max-width: 1100px; margin: 0 auto; padding: 28px 24px 80px; }
+
+  section { margin-bottom: 40px; scroll-margin-top: 150px; }
+  .cat-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
+  .cat-head h2 { font-size: 18px; margin: 0; color: var(--cream); }
+  .cat-count { font-size: 12px; color: var(--muted); }
+  .cat-blurb { font-size: 13px; color: var(--muted); margin: 0 0 16px; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 16px 14px;
+    transition: background .15s, border-color .15s, transform .15s;
+    position: relative;
+  }
+  .card:hover { background: var(--card-hover); border-color: rgba(212,165,116,0.4); transform: translateY(-2px); }
+  .rank {
+    position: absolute; top: 14px; right: 14px;
+    font-size: 11px; color: var(--muted);
+    background: var(--bg-soft); border: 1px solid var(--border);
+    width: 22px; height: 22px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-variant-numeric: tabular-nums;
+  }
+  .card h3 { margin: 0 30px 6px 0; font-size: 15px; }
+  .card .desc { font-size: 13px; color: #d8cfc0; margin: 0 0 10px; }
+  .card .meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .card .link { font-size: 12px; }
+  .card .also { font-size: 11px; color: var(--muted); }
+  .card .also b { color: var(--plum); font-weight: 600; }
+  .tag {
+    font-size: 10px; color: var(--muted);
+    border: 1px solid var(--border); border-radius: 6px;
+    padding: 1px 6px;
+  }
+
+  .empty { color: var(--muted); font-size: 14px; padding: 40px 0; text-align: center; }
+  mark { background: rgba(212,165,116,0.35); color: var(--cream); border-radius: 3px; padding: 0 2px; }
+
+  footer { max-width: 1100px; margin: 0 auto; padding: 0 24px 60px; color: var(--muted); font-size: 12px; }
+</style>
+</head>
+<body>
+  <header>
+    <div class="title-row">
+      <h1><span class="accent">⬡</span> Stacked Up</h1>
+      <span class="updated" id="updated"></span>
+    </div>
+    <p class="sub">One-stop reference for modern AI models, apps, agents, and tooling. Ranked best / most-popular first within each category.</p>
+    <div class="controls">
+      <input id="search" type="search" placeholder="Search everything — e.g. 'scraper', 'local', 'Claude'…" autocomplete="off" />
+      <span id="count"></span>
+    </div>
+    <div class="chips" id="chips"></div>
+  </header>
+
+  <main id="main"></main>
+
+  <footer>
+    To add or edit entries, open <code>catalog/data.js</code> and append to the relevant category — no build step required.
+  </footer>
+
+<script src="data.js"></script>
+<script>
+  const main = document.getElementById('main');
+  const chips = document.getElementById('chips');
+  const search = document.getElementById('search');
+  const countEl = document.getElementById('count');
+  document.getElementById('updated').textContent = 'updated ' + CATALOG.updated;
+
+  // Build cross-listing: clone items into categories named in `also`.
+  const catMap = new Map();
+  CATALOG.categories.forEach(c => catMap.set(c.title, { ...c, items: [...c.items] }));
+  CATALOG.categories.forEach(c => {
+    c.items.forEach(item => {
+      (item.also || []).forEach(other => {
+        const target = catMap.get(other);
+        if (target && !target.items.some(i => i.name === item.name)) {
+          target.items.push({ ...item, _crossFrom: c.title });
+        }
+      });
+    });
+  });
+  const cats = Array.from(catMap.values());
+
+  function slug(s){ return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); }
+
+  // Category jump chips
+  cats.forEach(c => {
+    const a = document.createElement('a');
+    a.className = 'chip';
+    a.href = '#' + slug(c.title);
+    a.textContent = c.title;
+    chips.appendChild(a);
+  });
+
+  function esc(s){ return s.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
+  function highlight(text, q){
+    if(!q) return esc(text);
+    const i = text.toLowerCase().indexOf(q.toLowerCase());
+    if(i < 0) return esc(text);
+    return esc(text.slice(0,i)) + '<mark>' + esc(text.slice(i,i+q.length)) + '</mark>' + esc(text.slice(i+q.length));
+  }
+
+  function render(q){
+    main.innerHTML = '';
+    q = (q || '').trim();
+    let total = 0;
+
+    cats.forEach(c => {
+      const matches = c.items.filter(it => {
+        if(!q) return true;
+        const hay = (it.name + ' ' + it.desc + ' ' + (it.tags||[]).join(' ') + ' ' + c.title).toLowerCase();
+        return hay.includes(q.toLowerCase());
+      });
+      if(matches.length === 0) return;
+      total += matches.length;
+
+      const sec = document.createElement('section');
+      sec.id = slug(c.title);
+      sec.innerHTML =
+        '<div class="cat-head"><h2>' + esc(c.title) + '</h2>' +
+        '<span class="cat-count">' + matches.length + (q ? ' match' + (matches.length>1?'es':'') : ' item' + (matches.length>1?'s':'')) + '</span></div>' +
+        '<p class="cat-blurb">' + esc(c.blurb) + '</p>';
+
+      const grid = document.createElement('div');
+      grid.className = 'grid';
+      matches.forEach((it, idx) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        const linkHost = it.url && it.url !== '#'
+          ? '<a class="link" href="' + it.url + '" target="_blank" rel="noopener">' + it.url.replace(/^https?:\/\//,'').replace(/\/$/,'') + ' ↗</a>'
+          : '<span class="also">internal / private</span>';
+        const tags = (it.tags||[]).map(t => '<span class="tag">' + esc(t) + '</span>').join('');
+        const cross = it._crossFrom ? '<span class="also">via <b>' + esc(it._crossFrom) + '</b></span>' : '';
+        card.innerHTML =
+          '<div class="rank">' + (idx+1) + '</div>' +
+          '<h3>' + highlight(it.name, q) + '</h3>' +
+          '<p class="desc">' + highlight(it.desc, q) + '</p>' +
+          '<div class="meta">' + linkHost + tags + cross + '</div>';
+        grid.appendChild(card);
+      });
+      sec.appendChild(grid);
+      main.appendChild(sec);
+    });
+
+    if(total === 0){
+      main.innerHTML = '<div class="empty">No matches for “' + esc(q) + '”.</div>';
+    }
+    countEl.textContent = total + ' result' + (total===1?'':'s');
+  }
+
+  search.addEventListener('input', e => render(e.target.value));
+  render('');
+</script>
+</body>
+</html>
