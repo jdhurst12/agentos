@@ -145,6 +145,7 @@ const CATALOG = {
         { name: "v0 (Vercel)", url: "https://v0.dev/", desc: "Generative UI tool that produces React/Tailwind components and full pages from prompts. Great for quickly scaffolding front-ends. Tightly tied to the Vercel stack." },
         { name: "bolt.new", url: "https://bolt.new/", desc: "In-browser AI full-stack builder that spins up and runs apps live via WebContainers. Prompt-to-deployed-app fast. Popular for prototypes." },
         { name: "Lovable", url: "https://lovable.dev/", desc: "AI app builder that generates and hosts full-stack web apps from natural language. Aimed at non-developers shipping real products. A leading 'vibe coding' platform." },
+        { name: "Mintlify", url: "https://mintlify.com/", desc: "Modern documentation platform for developer products, with AI-powered search, auto-generated API references, and an MCP server for managing docs via agents. Widely adopted by dev-tool companies for clean, fast docs sites." },
       ],
     },
 
