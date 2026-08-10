@@ -18,7 +18,7 @@ const INITIAL_MESSAGES: Message[] = [
   {
     id: '1',
     role: 'assistant',
-    content: "Mission Control online. I'm Claude, your primary AI interface. I can help you orchestrate agents, analyze data, write and debug code, and coordinate complex multi-step workflows. What shall we tackle today?",
+    content: "Agent Ops online. I'm Claude, your primary AI interface. I can help you orchestrate agents, analyze data, write and debug code, and coordinate complex multi-step workflows. What shall we tackle today?",
     timestamp: new Date(Date.now() - 120000),
     tokens: 48,
     responseTime: 0.8,
@@ -346,7 +346,7 @@ export default function ClaudePanel() {
           </button>
         </div>
         <div className="flex items-center justify-between mt-2 px-1">
-          <span className="text-[10px] text-slate-600">Connected to claude-sonnet-4-6 via AgentOS API</span>
+          <span className="text-[10px] text-slate-600">Connected to claude-sonnet-4-6 via Agent Ops API</span>
           <span className="text-[10px] text-slate-600 font-mono">{input.length} chars</span>
         </div>
       </div>

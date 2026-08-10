@@ -60,10 +60,10 @@ export default function Header({ onMenuClick }: { onMenuClick?: () => void } = {
 
         <div>
           <h1 className="text-sm font-bold tracking-[0.3em] text-white glow-blue">
-            AGENTOS
+            AGENT OPS
           </h1>
           <p className="text-[10px] tracking-[0.4em] text-blue-400/70 uppercase">
-            Mission Control
+            Agent Operations System
           </p>
         </div>
 

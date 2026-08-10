@@ -21,7 +21,7 @@ const PRIORITY_CONFIG = {
 
 export default function GoalsPage() {
   const [goals, setGoals] = useState<Goal[]>([
-    { id: '1', text: 'Complete AgentOS mission control dashboard', done: true, priority: 'high', createdAt: Date.now() - 86400000 },
+    { id: '1', text: 'Complete Agent Ops dashboard', done: true, priority: 'high', createdAt: Date.now() - 86400000 },
     { id: '2', text: 'Connect Claude CLI bridge to web interface', done: false, priority: 'high', createdAt: Date.now() - 3600000 },
     { id: '3', text: 'Set up Obsidian auto-sync for all sessions', done: false, priority: 'medium', createdAt: Date.now() },
     { id: '4', text: 'Configure OpenClaw research pipeline', done: false, priority: 'medium', createdAt: Date.now() },

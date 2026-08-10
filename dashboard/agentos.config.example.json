@@ -62,7 +62,7 @@
 
   "dashboard": {
     "port": 3333,
-    "title": "AgentOS Mission Control",
+    "title": "Agent Ops",
     "ownerName": "Agent"
   }
 }

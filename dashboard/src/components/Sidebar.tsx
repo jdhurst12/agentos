@@ -77,8 +77,8 @@ export default function Sidebar({ activeAgent, onSelect, onCreateAgent }: Sideba
           <Zap className="w-3.5 h-3.5 text-blue-300 relative z-10" />
         </div>
         <div>
-          <div className="text-[11px] font-bold tracking-[0.35em] text-white glow-violet">AGENTOS</div>
-          <div className="text-[9px] tracking-[0.4em] text-indigo-400/50 uppercase">Mission Control</div>
+          <div className="text-[11px] font-bold tracking-[0.35em] text-white glow-violet">AGENT OPS</div>
+          <div className="text-[9px] tracking-[0.4em] text-indigo-400/50 uppercase">Agent Operations System</div>
         </div>
       </div>
 

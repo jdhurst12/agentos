@@ -1,4 +1,4 @@
-# AI & Software Catalog
+# Stacked Up
 
 A searchable, categorized reference for AI models, tools, chat apps, coding assistants, agents, web scrapers, image/video generation, voice tools, vector databases, Docker FOSS apps, and notable GitHub repos.
 

@@ -41,7 +41,7 @@ const DEFAULT_CONFIG: AgentOSConfig = {
     { id: 'phantom', name: 'Phantom', type: 'Stealth', status: 'OFFLINE', color: 'slate', accent: '#64748b', avatar: '◇', endpoint: '', description: 'Stealth operations' },
   ],
   obsidian: { vaultDir: '/Users/jd/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian Vaults/2nd Brain | AI/Agent OS', syncEnabled: true, autoSaveOnStop: true },
-  dashboard: { port: 3333, title: 'AgentOS Mission Control', ownerName: 'Agent' },
+  dashboard: { port: 3333, title: 'Agent Ops', ownerName: 'Agent' },
 }
 
 function loadConfig(): AgentOSConfig {

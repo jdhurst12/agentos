@@ -153,8 +153,8 @@ function TopBar({
           <Terminal className="w-3 h-3 text-blue-400 relative z-10" />
         </div>
         <div>
-          <div className="text-[11px] font-black tracking-[0.3em] text-white glow-blue">AGENTOS</div>
-          <div className="text-[8px] tracking-[0.35em] text-slate-600 uppercase">Mission Control</div>
+          <div className="text-[11px] font-black tracking-[0.3em] text-white glow-blue">AGENT OPS</div>
+          <div className="text-[8px] tracking-[0.35em] text-slate-600 uppercase">Agent Operations System</div>
         </div>
       </div>
 

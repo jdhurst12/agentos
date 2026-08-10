@@ -8,8 +8,8 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'AgentOS Mission Control',
-  description: 'AI Agent Management Operating System',
+  title: 'Agent Ops',
+  description: 'Agent Operations System',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
